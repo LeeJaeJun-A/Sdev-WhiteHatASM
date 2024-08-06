@@ -1,9 +1,11 @@
-# JWT-Based Login Module
-This project implements JWT (JSON Web Token) based authentication using FastAPI for the backend and SvelteKit for the frontend. This document explains how to set up the project, configure the .env file, and get started.
+# AI assisted white hat ASM
 
 ![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=for-the-badge&logo=svelte&logoColor=white)
+![Python](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+![MongoDB](https://img.shields.io/badge/mongodb-%2347A248.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+
 
 ## Requirements
 - Python 3.9 or higher
@@ -61,31 +63,3 @@ npm install
 ```bash
 npm run dev
 ```
-
-## API Endpoints (backend/routes)
-### post /token
-Handles user login and returns an access token and refresh token.
-
-### post /refresh
-Refreshes the access token using the provided refresh token.
-
-### get /verify-token
-Verifies the validity of a provided JWT and returns user information.
-
-### post /user
-Creates a new user in the database.
-
-### delete /user/{id}
-Deletes a user by ID, except the root administrator account.
-
-### get /user
-Retrieves a list of users, optionally filtered by role.
-
-### get /user/locked
-Retrieves a list of locked user accounts.
-
-### post /user/{id}/unlock
-Unlocks a user account by ID.
-
-### post /user/{id}/lock
-Locks a user account by ID.
