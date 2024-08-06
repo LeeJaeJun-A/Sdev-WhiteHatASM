@@ -80,7 +80,7 @@ export function logout() {
   localStorage.setItem("refresh_token", "");
   setId(null);
   setRole(null);
-  goto("/");
+  window.location.href = '/';
 }
 
 export async function initializeSession() {
@@ -89,7 +89,7 @@ export async function initializeSession() {
     Swal.fire({
       icon: 'error',
       title: 'Unusual Approach',
-      text: 'Return to login page',
+      text: 'Return to home page',
     });
     logout();
   } else {

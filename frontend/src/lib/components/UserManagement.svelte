@@ -45,6 +45,25 @@
     }
   };
 
+  async function handleLockUser(userId: string){
+    if (userId === getId()){
+      Swal.fire("Error!", "You can't lock yourself.", "error");
+      return;
+    }
+
+    try {
+        await lockUser(userId);
+        users = users.filter((user) => user.id !== userId);
+        Swal.fire("Locked!", "The user has been locked.", "success");
+      } catch (error: any) {
+        if (error.detail === "Unable to lock root administrator account.") {
+          Swal.fire("Error!", `${error.detail}`, "error");
+        } else {
+          Swal.fire("Error!", "There was an error locking the user.", "error");
+        }
+      }
+  }
+
   async function handleDeleteUser(userId: string) {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -75,6 +94,12 @@
         }
       }
     }
+  }
+
+  async function lockUser(userId: string) {
+    return new Promise<void>((resolve, reject) => {
+      fastapi("POST", `/user/${userId}/lock`, {}, resolve, reject);
+    });
   }
 
   async function deleteUser(userId: string) {
@@ -117,7 +142,7 @@
   style="height: 94vh;"
 >
   <div class="h-full p-4 flex flex-col 4xl:p-6" style="width: 95%">
-    <h1 class="text-2xl font-bold mb-3 4xl:text-4xl 4xl:mb-6">
+    <h1 class="text-2xl font-bold mb-3 4xl:text-4xl 4xl:mb-6 select-none">
       User Management
     </h1>
     <div
@@ -152,7 +177,7 @@
             type="text"
             id="table-search"
             on:input={handleSearch}
-            class="block pt-2 ps-10 text-sm h-2/3 text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 4xl:text-xl 4xl:w-96"
+            class="block pt-2 ps-10 text-sm h-2/3 text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 4xl:text-xl 4xl:w-96 select-none"
             placeholder="Search by username"
           />
         </div>
@@ -191,14 +216,14 @@
       </div>
     </div>
     <Table shadow>
-      <TableHead class="text-center text-sm 4xl:text-lg">
+      <TableHead class="text-center text-sm 4xl:text-lg select-none">
         <TableHeadCell>ID</TableHeadCell>
         <TableHeadCell>Role</TableHeadCell>
         <TableHeadCell>Authorizer</TableHeadCell>
         <TableHeadCell>Creation</TableHeadCell>
         <TableHeadCell>Actions</TableHeadCell>
       </TableHead>
-      <TableBody tableBodyClass="divide-y">
+      <TableBody tableBodyClass="divide-y select-none">
         {#each filteredUsers as user}
           <TableBodyRow class="text-center text-sm 4xl:text-lg">
             <TableBodyCell>{user.id}</TableBodyCell>
@@ -208,6 +233,12 @@
               >{new Date(user.created_at).toLocaleString()}</TableBodyCell
             >
             <TableBodyCell>
+              <button
+                class="text-red-600 hover:text-red-700 hover:font-bold mr-4"
+                on:click={() => handleLockUser(user.id)}
+              >
+                Lock
+              </button>
               <button
                 class="text-red-600 hover:text-red-700 hover:font-bold"
                 on:click={() => handleDeleteUser(user.id)}

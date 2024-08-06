@@ -59,16 +59,16 @@
   style="height: 94vh;"
 >
   <div class="h-full p-4 4xl:p-6" style="width: 95%">
-    <h1 class="text-2xl font-bold mb-3 4xl:text-4xl 4xl:mb-6">Lock Management</h1>
+    <h1 class="text-2xl font-bold mb-3 4xl:text-4xl 4xl:mb-6 select-none">Lock Management</h1>
     <Table shadow>
-      <TableHead class="text-center text-sm 4xl:text-lg">
+      <TableHead class="text-center text-sm 4xl:text-lg select-none">
         <TableHeadCell>ID</TableHeadCell>
         <TableHeadCell>Role</TableHeadCell>
         <TableHeadCell>Authorizer</TableHeadCell>
         <TableHeadCell>Locked At</TableHeadCell>
         <TableHeadCell>Actions</TableHeadCell>
       </TableHead>
-      <TableBody tableBodyClass="divide-y">
+      <TableBody tableBodyClass="divide-y select-none">
         {#each locked_users as user}
           <TableBodyRow class="text-center text-sm 4xl:text-lg">
             <TableBodyCell>{user.id}</TableBodyCell>

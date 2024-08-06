@@ -1,54 +1,36 @@
-<script lang="ts">
-  export let role;
-  import { logout } from "$lib/auth";
+<script>
+  import { goto } from "$app/navigation";
 </script>
 
 <nav
-  class="px-2 bg-primary-800 w-full flex justify-center items-center"
-  style="height: 6vh;"
+  class="flex justify-between items-center p-2 border-gray-200 bg-gray-50 max-h-20 4xl:p-4"
+  style="height: 8%"
 >
-  <div class="flex justify-between items-center w-full">
-    <div class="flex items-center">
-      <a
-        href="/home"
-        class="flex justify-center items-center text-white px-3 rounded transition duration-300 ease-in-out transform hover:scale-105"
-        ><img class="w-7 h-7 mr-1  4xl:w-12 4xl:h-12" src="/favicon.png" alt="logo" />
-        <span
-          class="self-center text-white whitespace-nowrap text-2xl font-bold  4xl:text-4xl"
-          >Title</span
-        ></a
+  <div class="flex items-center space-x-2 h-full">
+    <img src="/shinnam.png" class="h-full" alt="logo" />
+    <span class="text-xl font-semibold select-none 4xl:text-3xl">Shinnam</span>
+  </div>
+  <ul class="flex space-x-20 4xl:space-x-40">
+    <li>
+      <a href="/" class="hover:text-gray-400 4xl:text-2xl select-none">Home</a>
+    </li>
+    <li>
+      <a href="/about" class="hover:text-gray-400 4xl:text-2xl select-none"
+        >About</a
       >
-    </div>
-    <div class="flex space-x-4 4xl:space-x-8">
-      <a
-        href="/one"
-        class="text-white px-3 py-2 rounded transition duration-300 ease-in-out transform hover:scale-110 4xl:text-2xl"
-        >One</a
+    </li>
+    <li>
+      <a href="/contact" class="hover:text-gray-400 4xl:text-2xl select-none"
+        >Contact</a
       >
-      <a
-        href="/two"
-        class="text-white px-3 py-2 rounded transition duration-300 ease-in-out transform hover:scale-110 4xl:text-2xl"
-        >Two</a
-      >
-      <a
-        href="/three"
-        class="text-white px-3 py-2 rounded transition duration-300 ease-in-out transform hover:scale-110 4xl:text-2xl"
-        >Three</a
-      >
-      {#if role === "admin"}
-        <a
-          href="/setting"
-          class="text-white px-3 py-2 rounded transition duration-300 ease-in-out transform hover:scale-110 4xl:text-2xl"
-          >Setting</a
-        >
-      {/if}
-      <button
-        type="button"
-        class="text-white px-3 py-2 rounded transition duration-300 ease-in-out transform hover:scale-110 4xl:text-2xl"
-        on:click={logout}
-      >
-        Logout
-      </button>
-    </div>
+    </li>
+  </ul>
+  <div>
+    <button
+      class="bg-blue-800 text-sm text-white rounded-full h-7 w-20 hover:bg-blue-900 4xl:text-xl 4xl:w-32 4xl:h-10 select-none"
+      on:click={() => goto("/login")}
+    >
+      로그인
+    </button>
   </div>
 </nav>

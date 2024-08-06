@@ -144,6 +144,13 @@ def unlock_user(id: str, database: Session = Depends(get_database)):
 
 @router.post("/user/{id}/lock")
 def lock_user(id: str, database: Session = Depends(get_database)):
+
+    if id == DEFAULT_ROOT_ACCOUNT_ID:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unable to lock root administrator account.",
+        )
+
     if not lock_account(id, database):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
