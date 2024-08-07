@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { initializeSession } from "$lib/auth";
   import { onMount } from "svelte";
   import { mode, setMode } from "$lib/store";
   import SideBar from "$lib/components/SideBar.svelte";

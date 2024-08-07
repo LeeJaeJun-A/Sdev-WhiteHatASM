@@ -23,27 +23,22 @@ const refreshToken = async (): Promise<string | null> => {
     return null;
   }
 
-  try {
-    const newTokens = await new Promise<{
-      access_token: string;
-      token_type: string;
-    }>((resolve, reject) => {
-      fastapi(
-        "POST",
-        "/refresh",
-        {},
-        resolve,
-        reject,
-        storedRefreshToken
-      );
-    });
-
-    const { access_token } = newTokens;
-    localStorage.setItem("access_token", access_token);
-    return access_token;
-  } catch (error) {
-    return null;
-  }
+  return new Promise<string | null>((resolve, reject) => {
+    fastapi(
+      'POST',
+      '/refresh',
+      { refresh_token: storedRefreshToken },
+      (response) => {
+        const { access_token } = response;
+        localStorage.setItem("access_token", access_token);
+        resolve(access_token);
+      },
+      (error) => {
+        console.error("Failed to refresh token:", error);
+        resolve(null);
+      }
+    );
+  });
 };
 
 export const verifyToken = async (): Promise<{
@@ -53,6 +48,7 @@ export const verifyToken = async (): Promise<{
   const storedToken = localStorage.getItem("access_token");
 
   if (storedToken) {
+    console.log(storedToken);
     try {
       const userData: UserData = await new Promise((resolve, reject) => {
         fastapi("GET", "/verify-token", {}, resolve, reject, storedToken);

@@ -3,6 +3,7 @@ import { writable } from "svelte/store";
 export const id = writable<string | null>(null);
 export const role = writable<string | null>(null);
 export const mode = writable<string | null>(null);
+export const userMode = writable<string | null>(null);
 
 export const getId = () => {
   let currentId: string | null = null;
@@ -26,4 +27,8 @@ export const setRole = (newRole: string | null) => {
 
 export const setMode = (newMode: string | null) => {
   mode.set(newMode);
+};
+
+export const setUserMode = (newMode: string | null) => {
+  userMode.set(newMode);
 };
