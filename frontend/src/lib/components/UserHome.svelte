@@ -222,7 +222,7 @@
               on:click={startInspection}
               disabled={!$agreedToTerms}
             >
-              검사 시작
+              크롤링 시작
             </button>
           </div>
         </div>

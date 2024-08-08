@@ -7,6 +7,7 @@ from backend.routes import authentication
 from backend.routes import user
 from backend.routes import crawl
 from backend.routes import websocket
+from backend.routes import test
 
 app = FastAPI()
 
@@ -14,6 +15,7 @@ app.include_router(authentication.router, tags=["login"])
 app.include_router(user.router, tags=["user"])
 app.include_router(crawl.router, tags=["crawler"])
 app.include_router(websocket.router, tags=["websocket"])
+app.include_router(test.router, tags=["test"])
 
 # Define CORS settings to allow requests from specified origins
 origins = ["http://localhost:5173"]

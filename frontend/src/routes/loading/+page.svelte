@@ -13,23 +13,20 @@
   function connectWebSocket() {
     return new Promise<void>((resolve, reject) => {
       const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/ws/${getId()}`;
-      console.log("Connecting to WebSocket URL: ", socketUrl);
       socket = new WebSocket(socketUrl);
 
       socket.onopen = () => {
-        console.log("WebSocket connection established");
         resolve();
       };
 
       socket.onmessage = (event) => {
         const message = event.data;
-        console.log("WebSocket message received:", message);
         if (message === "Full crawling completed") {
           isLoading = false;
         } else if (message.startsWith("{") && message.endsWith("}")) {
           try {
             setCrawlResult(JSON.parse(message));
-            goto("/exploit", {replaceState:true});
+            goto("/test", {replaceState:true});
           } catch (error) {
             console.error("Failed to parse JSON:", error);
             goto("/user", {replaceState:true});
@@ -39,12 +36,7 @@
         }
       };
 
-      socket.onclose = () => {
-        console.log("WebSocket connection closed");
-      };
-
       socket.onerror = (error) => {
-        console.error("WebSocket error", error);
         reject(error);
       };
     });
@@ -71,6 +63,7 @@
       console.error("Failed to connect to WebSocket:", error);
     }
   }
+  
   onMount(async () => {
     await startCrawling();
   });
@@ -98,7 +91,7 @@
         </div>
       {/each}
     </div>
-    <div class="absolute bottom-0 mb-12 flex flex-col justify-center items-center text-black 4xl:mb-24">
+    <div class="absolute bottom-0 mb-12 flex flex-col justify-center items-center text-black 4xl:mb-24 select-none">
       {#if isLoading}
         {#if currentMessage}
           <p class="text-sm 4xl:text-xl">{currentMessage}</p>
@@ -108,7 +101,7 @@
         on:click={goBack}
         class="mt-4 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-blue-300 4xl:mt-8 4xl:w-40 4xl:h-16 4xl:text-xl"
       >
-        검사 취소
+        크롤링 취소
       </button>
     </div>
   </div>

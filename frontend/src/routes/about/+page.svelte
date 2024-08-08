@@ -4,7 +4,7 @@
 
 <main class="bg-white w-screen h-screen">
   <NavBar/>
-  <div class="w-full" style="height: 92%;">
-    This is About
+  <div class="w-full flex items-center justify-center" style="height: 92%;">
+    This is about
   </div>
 </main>
