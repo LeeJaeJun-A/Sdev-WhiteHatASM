@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { goto } from "$app/navigation";
 </script>
 
@@ -25,12 +25,10 @@
       >
     </li>
   </ul>
-  <div>
-    <button
-      class="bg-blue-800 text-sm text-white rounded-full h-7 w-20 hover:bg-blue-900 4xl:text-xl 4xl:w-32 4xl:h-10 select-none"
-      on:click={() => goto("/login")}
-    >
-      로그인
-    </button>
-  </div>
+  <button
+    class="bg-blue-800 text-sm text-white rounded-full h-7 w-20 hover:bg-blue-900 4xl:text-xl 4xl:w-32 4xl:h-10 select-none"
+    on:click={() => goto("/login")}
+  >
+    로그인
+  </button>
 </nav>

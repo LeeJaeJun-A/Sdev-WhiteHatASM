@@ -1,24 +1,76 @@
 <script lang="ts">
   import { writable } from "svelte/store";
+  import { currentUrl, getCurrentUrl, setCurrentUrl } from "$lib/store";
+  import { goto } from "$app/navigation";
+  import Swal from "sweetalert2";
+  import fastapi from "$lib/fastapi";
+  import { onMount } from "svelte";
 
   // hardcoding
-  let urls = ["www.naver.com", "www.google.com", "www.youtube.com"];
+  let urls = [
+    "https://www.naver.com",
+    "https://www.google.com",
+    "https://www.youtube.com",
+  ];
   // hardcoding end
 
-  let currentUrl = writable("");
   let agreedToTerms = writable(false);
 
   function handleCheck() {
     agreedToTerms.update((value) => !value);
   }
 
-  function startInspection() {
-    if ($agreedToTerms) {
-      alert("검사가 시작됩니다.");
-    } else {
-      alert("약관에 동의해 주세요.");
+  async function startInspection() {
+    const url = getCurrentUrl();
+
+    if (!url) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid URL",
+        text: `URL을 입력해주세요.`,
+      });
+      return;
     }
+
+    if (!/^https?:\/\//i.test(url)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid URL",
+        text: "URL에 http:// 또는 https://를 포함해야 합니다.",
+      });
+      return;
+    }
+
+    fastapi(
+      "POST",
+      "/validate-url",
+      { url },
+      (response) => {
+        if (response.valid === false) {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid URL",
+            text: "유효하지 않은 URL 입니다.",
+          });
+          return;
+        } else if (response.valid === true) {
+          // 최근 URL history에 추가하기. Crawling start
+          goto("/loading");
+        }
+      },
+      (error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid URL",
+          text: `${error}`,
+        });
+      }
+    );
   }
+
+  onMount(() => {
+    setCurrentUrl("");
+  });
 </script>
 
 <div class="flex w-full h-full select-none">
@@ -36,15 +88,15 @@
           {#each urls as url}
             <button
               class="hover:bg-gray-100 w-5/6 py-2 border-b border-gray-300 4xl:text-2xl truncate"
-              on:click={() => currentUrl.set(url)}>{url}</button
+              on:click={() => setCurrentUrl(url)}>{url}</button
             >
           {/each}
         </div>
       </div>
-      <div
-        class="w-1/2 h-full flex justify-center items-center"
-      >
-        <div class="w-11/12 h-full border bg-white flex flex-col justify-center items-center rounded-lg shadow-md">
+      <div class="w-1/2 h-full flex justify-center items-center">
+        <div
+          class="w-11/12 h-full border bg-white flex flex-col justify-center items-center rounded-lg shadow-md"
+        >
           <p
             class="text-left w-5/6 text-lg font-semibold 4xl:text-3xl 4xl:mb-2"
           >

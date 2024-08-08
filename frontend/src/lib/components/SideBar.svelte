@@ -37,7 +37,7 @@
   });
 </script>
 
-<section class="h-full min-w-80" style="width: 15vw">
+<section class="h-full min-w-64" style="width: 15vw">
   <Sidebar class="h-full w-full select-none">
     <SidebarWrapper class="h-full w-full">
       <SidebarGroup>

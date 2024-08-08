@@ -1,7 +1,5 @@
-// auth.ts
 import fastapi from "$lib/fastapi";
-import { goto } from "$app/navigation";
-import { setRole, setId, getRole, getId } from "$lib/store";
+import { setRole, setId, getRole, getId, setCurrentUrl, setCrawlResult } from "$lib/store";
 import Swal from "sweetalert2";
 
 interface UserData {
@@ -34,7 +32,6 @@ const refreshToken = async (): Promise<string | null> => {
         resolve(access_token);
       },
       (error) => {
-        console.error("Failed to refresh token:", error);
         resolve(null);
       }
     );
@@ -48,7 +45,6 @@ export const verifyToken = async (): Promise<{
   const storedToken = localStorage.getItem("access_token");
 
   if (storedToken) {
-    console.log(storedToken);
     try {
       const userData: UserData = await new Promise((resolve, reject) => {
         fastapi("GET", "/verify-token", {}, resolve, reject, storedToken);
@@ -76,6 +72,8 @@ export function logout() {
   localStorage.setItem("refresh_token", "");
   setId(null);
   setRole(null);
+  setCurrentUrl(null);
+  setCrawlResult(null);
   window.location.href = '/';
 }
 

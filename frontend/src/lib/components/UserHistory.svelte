@@ -19,17 +19,17 @@
   let logs : LogEntry[] = [
     {
       date: "2024-08-01",
-      url: "www.naver.com",
+      url: "https://www.naver.com",
       status: "Completed",
     },
     {
       date: "2024-08-02",
-      url: "www.google.com",
+      url: "https://www.google.com",
       status: "Stopped",
     },
     {
       date: "2024-08-02",
-      url: "www.shinnam.com",
+      url: "https://www.shinnam12324.com",
       status: "Failed to crawl",
     },
     // Add more sample data here
@@ -88,17 +88,20 @@
         <TableHeadCell>URL</TableHeadCell>
         <TableHeadCell>STATUS</TableHeadCell>
         <TableHeadCell>REPORT</TableHeadCell>
+        <TableHeadCell>ACTION</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y">
         {#each filteredLogs as log}
           <TableBodyRow class="text-center">
             <TableBodyCell>{log.date}</TableBodyCell>
             <TableBodyCell>{log.url}</TableBodyCell>
-            <TableBodyCell class={`
-              ${log.status === "Completed" ? 'text-green-600' : 'text-red-500'}
-            `}>{log.status}</TableBodyCell>
+            <TableBodyCell>{log.status}</TableBodyCell>
             <TableBodyCell
-              ><button on:click={() => downloadReport(log)}>Download</button
+              ><button on:click={() => downloadReport(log)} class="text-blue-700">Download</button
+              ></TableBodyCell
+            >
+            <TableBodyCell
+              ><button class="text-red-500">Delete</button
               ></TableBodyCell
             >
           </TableBodyRow>

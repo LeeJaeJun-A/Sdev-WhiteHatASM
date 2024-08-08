@@ -1,15 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routes import authentication
-from backend.routes import user
 from contextlib import asynccontextmanager
 from backend.database.database import SessionLocal
 from backend.database.init_database import init_database
+from backend.routes import authentication
+from backend.routes import user
+from backend.routes import crawl
+from backend.routes import websocket
 
 app = FastAPI()
 
 app.include_router(authentication.router, tags=["login"])
 app.include_router(user.router, tags=["user"])
+app.include_router(crawl.router, tags=["crawler"])
+app.include_router(websocket.router, tags=["websocket"])
 
 # Define CORS settings to allow requests from specified origins
 origins = ["http://localhost:5173"]

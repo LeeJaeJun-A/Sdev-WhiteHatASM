@@ -28,9 +28,9 @@
             showConfirmButton: false,
           }).then(() => {
             if(data.role === "admin"){
-                goto("/admin");
+                goto("/admin", {replaceState:true});
             }else{
-                goto("/user");
+                goto("/user", {replaceState:true});
             }
           });
         },
