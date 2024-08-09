@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 class HistoryItem(BaseModel):
-    _id: Optional[str]
+    _id: str
     time: str
     main_url: str
     status: str
@@ -26,12 +26,6 @@ class UpdateHistoryRequest(BaseModel):
     file: Optional[str] = None
 
 
-# Helper function to convert MongoDB document to Pydantic model
-def document_to_dict(document):
-    document["_id"] = str(document["_id"])
-    return document
-
-
 @router.get("/history/{user_id}")
 async def get_histories(user_id: str):
     user_history = await history_collection.find_one(
@@ -40,6 +34,7 @@ async def get_histories(user_id: str):
     if user_history is None:
         raise HTTPException(status_code=404, detail="History not found")
     return user_history.get("histories", [])
+
 
 @router.get("/history/{user_id}/recent", response_model=List[str])
 async def get_recent_histories(user_id: str):

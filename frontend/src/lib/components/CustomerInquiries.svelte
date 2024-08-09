@@ -7,43 +7,69 @@
     TableHead,
     TableHeadCell,
   } from "flowbite-svelte";
+  import Swal from "sweetalert2";
+  import fastapi from "$lib/fastapi";
+  import { onMount } from "svelte";
 
   interface Inquiry {
-    id: number;
+    _id: string;
     title: string;
     email: string;
     phone: string;
     message: string;
+    is_read: boolean;
   }
 
-  // 샘플 데이터 (실제 데이터는 API 등을 통해 받아올 수 있음)
-  let inquiries: Inquiry[] = [
-    {
-      id: 1,
-      title: "문의 제목 1",
-      email: "user1@example.com",
-      phone: "123-456-7890",
-      message: "세부 메시지 내용 1",
-    },
-    {
-      id: 2,
-      title: "문의 제목 2",
-      email: "user2@example.com",
-      phone: "987-654-3210",
-      message: "세부 메시지 내용 2",
-    },
-  ];
+  let inquiries: Inquiry[] = [];
 
   let expandedId: number | null = null;
 
-  function toggleDetail(id: number): void {
-    expandedId = expandedId === id ? null : id;
+  async function toggleDetail(index: number, id: string): Promise<void> {
+    expandedId = expandedId === index ? null : index;
+    console.log(id);
+    try {
+      await new Promise<void>((resolve, reject) => {
+        fastapi("PUT", "/contact/read", { id }, resolve, reject);
+      });
+    } catch (error) {
+      console.error("Error update inquiry status:", error);
+    }
   }
 
-  function deleteInquiry(id: number, event: MouseEvent): void {
-    event.stopPropagation(); // 클릭 이벤트 전파 방지
-    inquiries = inquiries.filter((inquiry) => inquiry.id !== id);
+  async function deleteInquiry(id: string, event: MouseEvent): Promise<void> {
+    event.stopPropagation();
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        fastapi("DELETE", "/contact", { id }, resolve, reject);
+      });
+      inquiries = inquiries.filter((inquiry) => inquiry._id !== id);
+    } catch (error) {
+      console.error("Error deleting inquiry:", error);
+    }
   }
+
+  async function fetchInquiries() {
+    try {
+      inquiries = await new Promise((resolve, reject) => {
+        fastapi("GET", "/contact", {}, resolve, reject);
+      });
+
+      console.log(inquiries);
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage,
+      });
+    }
+  }
+
+  onMount(fetchInquiries);
 </script>
 
 <section
@@ -62,10 +88,10 @@
         <TableHeadCell>Actions</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y select-none">
-        {#each inquiries as inquiry}
+        {#each inquiries as inquiry, index}
           <TableBodyRow
-            class={`cursor-pointer text-center text-sm 4xl:text-lg ${expandedId === inquiry.id ? "bg-gray-200" : "hover:bg-gray-50"}`}
-            on:click={() => toggleDetail(inquiry.id)}
+            class={`cursor-pointer text-center text-sm 4xl:text-lg ${expandedId === index ? "bg-gray-200" : "hover:bg-gray-50"}`}
+            on:click={() => toggleDetail(index, inquiry._id)}
           >
             <TableBodyCell>{inquiry.title}</TableBodyCell>
             <TableBodyCell>{inquiry.email}</TableBodyCell>
@@ -73,13 +99,13 @@
             <TableBodyCell>
               <button
                 class="bg-red-500 text-white px-3 py-1 rounded"
-                on:click={(e) => deleteInquiry(inquiry.id, e)}
+                on:click={(e) => deleteInquiry(inquiry._id, e)}
               >
                 Delete
               </button>
             </TableBodyCell>
           </TableBodyRow>
-          {#if expandedId === inquiry.id}
+          {#if expandedId === index}
             <TableBodyRow class="bg-gray-50">
               <TableBodyCell colspan="4" class="p-4">
                 {inquiry.message}

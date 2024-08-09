@@ -3,10 +3,12 @@
   import { Contact } from "flowbite-svelte-blocks";
   import { Label, Input, Textarea, Button } from "flowbite-svelte";
   import { writable } from "svelte/store";
+  import fastapi from "$lib/fastapi";
+  import Swal from "sweetalert2";
 
   const email = writable<string>("");
-  const phone_number = writable<string>("");
-  const subject = writable<string>("");
+  const phone = writable<string>("");
+  const title = writable<string>("");
   const message = writable<string>("");
 
   let emailError = writable<string | null>(null);
@@ -15,7 +17,7 @@
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRegex = /^010-\d{4}-\d{4}$/;
 
-  const handleSubmit = (event: Event) => {
+  async function handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
     let valid = true;
@@ -27,7 +29,7 @@
       emailError.set(null);
     }
 
-    if (!phoneRegex.test($phone_number)) {
+    if (!phoneRegex.test($phone)) {
       phoneError.set(
         "유효한 전화번호 형식을 입력해 주세요. (예: 010-1234-5678)"
       );
@@ -37,17 +39,43 @@
     }
 
     if (valid) {
-      console.log("Email:", $email);
-      console.log("Phone Number:", $phone_number);
-      console.log("Subject:", $subject);
-      console.log("Message:", $message);
+      try {
+        await new Promise<void>((resolve, reject) => {
+          fastapi(
+            "POST",
+            "/contact",
+            { title: $title, phone: $phone, email: $email, message: $message },
+            resolve,
+            reject
+          );
+        });
+        email.set("");
+        phone.set("");
+        title.set("");
+        message.set("");
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "문의가 성공적으로 전송되었습니다.",
+        });
+      } catch (error) {
+        console.error("Submission error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "문의 전송에 실패했습니다. 다시 시도해 주세요.",
+        });
+      }
     }
-  };
+  }
 </script>
 
 <main class="bg-white w-screen h-screen">
   <NavBar />
-  <div class="w-full flex justify-center items-center p-2 select-none" style="height: 92%;">
+  <div
+    class="w-full flex justify-center items-center p-2 select-none"
+    style="height: 92%;"
+  >
     <div class="w-full h-full flex flex-col justify-center items-center">
       <Contact class="w-1/3">
         <p
@@ -92,7 +120,7 @@
               id="phone_number"
               name="phone_number"
               placeholder="010-1234-5678"
-              bind:value={$phone_number}
+              bind:value={$phone}
               class="w-full 4xl:text-xl"
               required
             />
@@ -108,7 +136,7 @@
               id="subject"
               name="subject"
               placeholder="도와드릴 사항을 알려주세요"
-              bind:value={$subject}
+              bind:value={$title}
               class="w-full 4xl:text-xl"
               required
             />

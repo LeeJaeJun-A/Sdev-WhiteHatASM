@@ -10,6 +10,7 @@ from backend.routes import websocket
 from backend.routes import test
 from backend.routes import history
 from backend.routes import report
+from backend.routes import contact
 
 app = FastAPI()
 
@@ -20,6 +21,7 @@ app.include_router(websocket.router, tags=["websocket"])
 app.include_router(test.router, tags=["test"])
 app.include_router(history.router, tags=["history"])
 app.include_router(report.router, tags=["report"])
+app.include_router(contact.router, tags=["contact"])
 
 # Define CORS settings to allow requests from specified origins
 origins = ["http://localhost:5173"]
