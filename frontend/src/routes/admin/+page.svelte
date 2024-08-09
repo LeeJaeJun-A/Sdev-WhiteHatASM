@@ -4,7 +4,8 @@
   import SideBar from "$lib/components/SideBar.svelte";
   import UserManagement from "$lib/components/UserManagement.svelte";
   import LockManagement from "$lib/components/LockManagement.svelte";
-
+  import CustomerInquiries from "$lib/components/CustomerInquiries.svelte";
+  
   onMount(async () => {
     setMode("UserManagement");
   });
@@ -20,6 +21,8 @@
         <UserManagement />
       {:else if current_mode === "LockManagement"}
         <LockManagement />
+      {:else if current_mode === "CustomerInquiries"}
+        <CustomerInquiries />
       {/if}
     </div>
   </div>

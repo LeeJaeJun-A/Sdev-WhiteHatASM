@@ -201,8 +201,6 @@
             class="w-6 h-6 text-gray-800 4xl:w-8 4xl:h-8"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -234,13 +232,13 @@
             >
             <TableBodyCell>
               <button
-                class="text-red-600 hover:text-red-700 hover:font-bold mr-4"
+                class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-600 hover:font-bold mr-4"
                 on:click={() => handleLockUser(user.id)}
               >
                 Lock
               </button>
               <button
-                class="text-red-600 hover:text-red-700 hover:font-bold"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 hover:font-bold"
                 on:click={() => handleDeleteUser(user.id)}
               >
                 Delete

@@ -59,7 +59,9 @@
   style="height: 94vh;"
 >
   <div class="h-full p-4 4xl:p-6" style="width: 95%">
-    <h1 class="text-2xl font-bold mb-3 4xl:text-4xl 4xl:mb-6 select-none">Lock Management</h1>
+    <h1 class="text-2xl font-bold mb-3 4xl:text-4xl 4xl:mb-6 select-none">
+      Lock Management
+    </h1>
     <Table shadow>
       <TableHead class="text-center text-sm 4xl:text-lg select-none">
         <TableHeadCell>ID</TableHeadCell>
@@ -79,7 +81,7 @@
             >
             <TableBodyCell>
               <button
-                class="text-sm text-red-600 hover:text-red-700 hover:font-bold 4xl:text-lg"
+                class="text-sm bg-red-400 text-white px-3 py-1 rounded hover:text-yellow-600 hover:font-bold 4xl:text-lg"
                 on:click={() => unlockUser(user.id)}
               >
                 Unlock

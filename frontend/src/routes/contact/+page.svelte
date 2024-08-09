@@ -47,7 +47,7 @@
 
 <main class="bg-white w-screen h-screen">
   <NavBar />
-  <div class="w-full flex justify-center items-center p-2" style="height: 92%;">
+  <div class="w-full flex justify-center items-center p-2 select-none" style="height: 92%;">
     <div class="w-full h-full flex flex-col justify-center items-center">
       <Contact class="w-1/3">
         <p
