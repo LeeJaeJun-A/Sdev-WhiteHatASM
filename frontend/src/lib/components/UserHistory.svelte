@@ -1,15 +1,16 @@
 <script lang="ts">
   import {
     Table,
-    TableBody,
-    TableBodyCell,
-    TableBodyRow,
     TableHead,
     TableHeadCell,
+    TableBody,
+    TableBodyRow,
+    TableBodyCell,
   } from "flowbite-svelte";
-  import { getId } from "$lib/store";
   import { onMount } from "svelte";
+  import { getId } from "$lib/store";
   import fastapi from "$lib/fastapi";
+  import { format } from "date-fns";
 
   interface LogEntry {
     time: string;
@@ -20,9 +21,9 @@
   }
 
   let logs: LogEntry[] = [];
-
   let filteredLogs: LogEntry[] = [...logs];
-  let dateFilter: string = "";
+  let dateFrom: string = "";
+  let dateTo: string = "";
   let urlFilter: string = "";
   let statusFilter: string = "";
 
@@ -33,7 +34,6 @@
       });
 
       const blob = await response.blob();
-
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -47,10 +47,35 @@
     }
   }
 
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return format(date, "yyyy-MM-dd HH:mm:ss");
+  }
+
+  function syncDates() {
+    if (dateFrom && !dateTo) {
+      dateTo = dateFrom;
+    } else if (!dateFrom && dateTo) {
+      dateFrom = dateTo;
+    } else if (dateFrom && dateTo && new Date(dateFrom) > new Date(dateTo)) {
+      dateFrom = dateTo;
+    }
+  }
+
   function filterLogs() {
+    syncDates();
     filteredLogs = logs.filter((log) => {
+      const logDate = new Date(log.time);
+      const fromDate = new Date(dateFrom);
+      const toDate = new Date(dateTo);
+
+      const adjustedToDate = toDate
+        ? new Date(toDate.setHours(23, 59, 59, 999))
+        : null;
+
       return (
-        (!dateFilter || log.time.includes(dateFilter)) &&
+        (!dateFrom || logDate >= fromDate) &&
+        (adjustedToDate === null || logDate <= adjustedToDate) &&
         (!urlFilter ||
           log.main_url.toLowerCase().includes(urlFilter.toLowerCase())) &&
         (!statusFilter ||
@@ -111,22 +136,30 @@
   <div class="w-full p-6">
     <div class="flex items-center mb-6">
       <div
-        class="w-full bg-white shadow-md rounded-lg p-1.5 flex items-center space-x-4"
+        class="w-full bg-white shadow-md rounded-lg p-1.5 pl-2 flex items-center space-x-4 4xl:p-3"
       >
-        <span class="text-lg font-semibold">Filter:</span>
+        <p class="4xl:text-lg">From</p>
         <input
-          type="text"
-          placeholder="Date"
-          bind:value={dateFilter}
-          on:input={filterLogs}
-          class="border rounded px-3 py-2 text-sm 4xl:text-lg shadow-sm"
+          type="date"
+          bind:value={dateFrom}
+          on:change={filterLogs}
+          class="rounded px-1 py-2 text-sm shadow-sm border-none 4xl:text-lg focus:ring-gray-500"
+          placeholder="From Date"
+        />
+        <p>To</p>
+        <input
+          type="date"
+          bind:value={dateTo}
+          on:change={filterLogs}
+          class="border rounded px-1 py-2 text-sm shadow-sm border-none 4xl:text-lg focus:ring-gray-500"
+          placeholder="To Date"
         />
         <input
           type="text"
           placeholder="URL"
           bind:value={urlFilter}
           on:input={filterLogs}
-          class="border rounded px-3 py-2 text-sm 4xl:text-lg shadow-sm"
+          class="border rounded px-3 py-2 text-sm shadow-sm w-1/3 4xl:text-lg focus:ring-gray-500"
         />
       </div>
     </div>
@@ -141,23 +174,27 @@
       <TableBody tableBodyClass="divide-y">
         {#each filteredLogs as log}
           <TableBodyRow class="text-center 4xl:text-lg">
-            <TableBodyCell>{log.time}</TableBodyCell>
+            <TableBodyCell>{formatDate(log.time)}</TableBodyCell>
             <TableBodyCell>{log.main_url}</TableBodyCell>
-            <TableBodyCell class={`${log.status === "Test Completed" ? "text-green-500" : "text-red-500"}`}>
+            <TableBodyCell
+              class={`${log.status === "Test Completed" ? "text-green-500" : "text-red-500"}`}
+            >
               {log.status}
             </TableBodyCell>
-              <TableBodyCell
-                ><button
-                  on:click={() => downloadReport(log)}
-                  class="text-gray-500 disabled:text-blue-700 cursor-not-allowed disabled:cursor-pointer"
-                  disabled={log.file !== null}>Download</button
-                ></TableBodyCell
+            <TableBodyCell>
+              <button
+                on:click={() => downloadReport(log)}
+                class="text-gray-500 disabled:text-blue-700 cursor-not-allowed disabled:cursor-pointer"
+                disabled={log.file === null}
               >
-            <TableBodyCell
-              ><button class="text-red-500" on:click={() => deleteLog(log._id)}
-                >Delete</button
-              ></TableBodyCell
-            >
+                Download
+              </button>
+            </TableBodyCell>
+            <TableBodyCell>
+              <button class="text-red-500" on:click={() => deleteLog(log._id)}>
+                Delete
+              </button>
+            </TableBodyCell>
           </TableBodyRow>
         {/each}
       </TableBody>
