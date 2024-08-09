@@ -25,7 +25,6 @@
   let dateFrom: string = "";
   let dateTo: string = "";
   let urlFilter: string = "";
-  let statusFilter: string = "";
 
   async function downloadReport(log: LogEntry) {
     try {
@@ -69,19 +68,14 @@
       const fromDate = new Date(dateFrom);
       const toDate = new Date(dateTo);
 
-      const adjustedToDate = toDate
-        ? new Date(toDate.setHours(23, 59, 59, 999))
-        : null;
-
       return (
         (!dateFrom || logDate >= fromDate) &&
-        (adjustedToDate === null || logDate <= adjustedToDate) &&
+        (!dateTo || logDate <= toDate) &&
         (!urlFilter ||
-          log.main_url.toLowerCase().includes(urlFilter.toLowerCase())) &&
-        (!statusFilter ||
-          log.status.toLowerCase().includes(statusFilter.toLowerCase()))
+          log.main_url.toLowerCase().includes(urlFilter.toLowerCase()))
       );
     });
+    console.log(filteredLogs);
   }
 
   async function fetchLogs(user_id: string) {
@@ -191,7 +185,10 @@
               </button>
             </TableBodyCell>
             <TableBodyCell>
-              <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 select-none" on:click={() => deleteLog(log._id)}>
+              <button
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 select-none"
+                on:click={() => deleteLog(log._id)}
+              >
                 Delete
               </button>
             </TableBodyCell>
