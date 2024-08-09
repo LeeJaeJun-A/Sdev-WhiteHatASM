@@ -25,6 +25,7 @@
   let dateFrom: string = "";
   let dateTo: string = "";
   let urlFilter: string = "";
+  let statusFilter: string = "";
 
   async function downloadReport(log: LogEntry) {
     try {
@@ -72,7 +73,8 @@
         (!dateFrom || logDate >= fromDate) &&
         (!dateTo || logDate <= toDate) &&
         (!urlFilter ||
-          log.main_url.toLowerCase().includes(urlFilter.toLowerCase()))
+          log.main_url.toLowerCase().includes(urlFilter.toLowerCase())) &&
+        (!statusFilter || log.status === statusFilter)
       );
     });
     console.log(filteredLogs);
@@ -148,13 +150,22 @@
           class="border rounded px-1 py-2 text-sm shadow-sm border-none 4xl:text-lg focus:ring-gray-500"
           placeholder="To Date"
         />
-        <input
-          type="text"
-          placeholder="URL"
-          bind:value={urlFilter}
-          on:input={filterLogs}
-          class="border rounded px-3 py-2 text-sm shadow-sm w-1/3 4xl:text-lg focus:ring-gray-500"
-        />
+        <select
+          bind:value={statusFilter}
+          on:change={filterLogs}
+          class="border rounded px-3 py-2 text-sm shadow-sm 4xl:text-lg focus:ring-gray-500"
+        >
+          <option value="">All Statuses</option>
+          <option value="Test Completed">Test Completed</option>
+          <option value="Test Canceled">Test Canceled</option>
+        </select>
+          <input
+            type="text"
+            placeholder="URL"
+            bind:value={urlFilter}
+            on:input={filterLogs}
+            class="border rounded px-3 py-2 text-sm shadow-sm w-1/3 4xl:text-lg focus:ring-gray-500"
+          />
       </div>
     </div>
     <Table shadow>
