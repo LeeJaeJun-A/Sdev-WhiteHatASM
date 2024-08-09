@@ -132,11 +132,11 @@
   });
 </script>
 
-<div class="flex w-full select-none h-full bg-gray-50">
+<div class="flex w-full h-full bg-gray-50">
   <div class="w-full p-6">
     <div class="flex items-center mb-6">
       <div
-        class="w-full bg-white shadow-md rounded-lg p-1.5 pl-2 flex items-center space-x-4 4xl:p-3"
+        class="w-full bg-white shadow-md rounded-lg p-1.5 pl-2 flex items-center space-x-4 4xl:p-3 select-none"
       >
         <p class="4xl:text-lg">From</p>
         <input
@@ -164,7 +164,7 @@
       </div>
     </div>
     <Table shadow>
-      <TableHead class="text-center text-sm 4xl:text-lg">
+      <TableHead class="text-center text-sm 4xl:text-lg select-none">
         <TableHeadCell>DATE</TableHeadCell>
         <TableHeadCell>URL</TableHeadCell>
         <TableHeadCell>STATUS</TableHeadCell>
@@ -177,21 +177,21 @@
             <TableBodyCell>{formatDate(log.time)}</TableBodyCell>
             <TableBodyCell>{log.main_url}</TableBodyCell>
             <TableBodyCell
-              class={`${log.status === "Test Completed" ? "text-green-500" : "text-red-500"}`}
+              class={`select-none ${log.status === "Test Completed" ? "text-green-500" : "text-red-500"}`}
             >
               {log.status}
             </TableBodyCell>
             <TableBodyCell>
               <button
                 on:click={() => downloadReport(log)}
-                class="text-gray-500 disabled:text-blue-700 cursor-not-allowed disabled:cursor-pointer"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 disabled:bg-gray-500 disabled:cursor-not-allowed select-none"
                 disabled={log.file === null}
               >
                 Download
               </button>
             </TableBodyCell>
             <TableBodyCell>
-              <button class="text-red-500" on:click={() => deleteLog(log._id)}>
+              <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 select-none" on:click={() => deleteLog(log._id)}>
                 Delete
               </button>
             </TableBodyCell>
