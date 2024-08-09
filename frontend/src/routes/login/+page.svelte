@@ -225,7 +225,7 @@
             >
             <div>
               <a
-                href="/"
+                href="/contact"
                 class="font-semibold text-indigo-600 hover:text-indigo-500"
                 >비밀번호를 잊어버리셨나요?</a
               >
