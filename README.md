@@ -25,27 +25,38 @@ pip install -r requirements.txt
 2. Configure .env File:
 ``` .env
 # JWT (JSON Web Token) Configuration
-JWT_SECRET_KEY="your_generated_secret_key_here"  # Replace with a strong secret key
+# Change this to a secure key in production. This is just a test key.
+JWT_SECRET_KEY="SERVER_BY_ENKI_LEEJAEJUN"  # Replace with a strong secret key
 JWT_ALGORITHM="HS256"  # Algorithm used for encoding and decoding JWTs
 JWT_ACCESS_TOKEN_EXPIRE_SECONDS=3600  # Access token expiry time in seconds (1 hour)
 JWT_REFRESH_TOKEN_EXPIRE_SECONDS=86400  # Refresh token expiry time in seconds (24 hours)
 
 # Database Configuration
+# The path to the SQLite3 database file. Change this to your production database path if different.
 AUTH_MODULE_DB_PATH="sqlite:///./auth.db"  # Replace with your actual database URL or path
 
+MONGODB_URL = "mongodb://localhost:27017" # Replace with your actual database URL or path
+
 # Account Settings for the Service Web Application
+# Default root account credentials. Change these to secure credentials in production.
 DEFAULT_ROOT_ACCOUNT_ID="root"  # Replace with a secure root account ID
 DEFAULT_ROOT_ACCOUNT_PASSWORD="root1234"  # Replace with a secure root account password
 
 # Account Lockout Settings
+# Maximum allowed login failures before account lockout
 MAX_FAILURES=5  # Adjust based on your security policy
+
+# Duration for which the account is locked out after reaching the maximum number of failures
 LOCK_TIME_MINUTES=5  # Adjust based on your security policy
 
 # FastAPI URL Configuration
+# URL for the FastAPI application. Change this to the production URL.
 VITE_FASTAPI_URL="http://127.0.0.1:8000"  # Replace with your production FastAPI URL
 
 # Password Rehashing Configuration
+# Number of successful requests after which the user's password should be rehashed.
 REHASH_COUNT_STANDARD=10  # Adjust based on your security requirements
+
 ```
 3. Run the Backend Server:
 ```
