@@ -277,7 +277,7 @@
 <main class="h-screen w-screen bg-gray-50 flex select-none">
   <div id="tree" class="h-full w-1/2 p-4">
     <div
-      class="h-full w-full shadow-md border rounded-lg overflow-auto pt-4 flex flex-col items-start"
+      class="h-full w-full shadow-md border rounded-lg overflow-auto pt-4 flex flex-col items-start bg-white"
     >
       {#if crawlResult}
         <Tree data={crawlResult} />
