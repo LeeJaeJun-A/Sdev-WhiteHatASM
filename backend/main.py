@@ -9,6 +9,7 @@ from backend.routes import crawl
 from backend.routes import websocket
 from backend.routes import test
 from backend.routes import history
+from backend.routes import report
 
 app = FastAPI()
 
@@ -18,6 +19,7 @@ app.include_router(crawl.router, tags=["crawler"])
 app.include_router(websocket.router, tags=["websocket"])
 app.include_router(test.router, tags=["test"])
 app.include_router(history.router, tags=["history"])
+app.include_router(report.router, tags=["report"])
 
 # Define CORS settings to allow requests from specified origins
 origins = ["http://localhost:5173"]

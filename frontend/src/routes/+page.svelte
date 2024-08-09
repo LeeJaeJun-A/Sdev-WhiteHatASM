@@ -9,7 +9,7 @@
     <img
       src="/preview.png"
       alt="preview"
-      class="absolute right-10 w-1/2 z-1 opacity-70 4xl:right-40"
+      class="absolute right-10 w-3/5 z-1 opacity-70 4xl:right-40"
       style="bottom: 20%;"
     />
     <div class="w-5/6 flex flex-col justify-center h-5/6 z-10 space-y-2 select-none">

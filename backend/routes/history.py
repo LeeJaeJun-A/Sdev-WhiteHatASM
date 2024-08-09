@@ -33,7 +33,7 @@ def document_to_dict(document):
 
 
 @router.get("/history/{user_id}")
-async def get_history(user_id: str):
+async def get_histories(user_id: str):
     user_history = await history_collection.find_one(
         {"user_id": user_id}, {"_id": 0, "histories": 1}
     )
@@ -41,9 +41,8 @@ async def get_history(user_id: str):
         raise HTTPException(status_code=404, detail="History not found")
     return user_history.get("histories", [])
 
-
 @router.get("/history/{user_id}/recent", response_model=List[str])
-async def get_recent_history(user_id: str):
+async def get_recent_histories(user_id: str):
     cursor = (
         history_collection.find({"user_id": user_id}, {"_id": 0, "histories": 1})
         .sort("histories.time", DESCENDING)

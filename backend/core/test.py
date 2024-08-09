@@ -24,8 +24,7 @@ async def send_json(user_id: str, data: dict):
     output: x
     
     socket으로 메세지 보내는 것만 확실하게 해주고, 보고서 생성 후 db에 파일 저장해주면 됩니다.
-    db에는 user_id, 파일 이렇게 같이 저장해주시고, 파일이름에는 현재 시간 등을 포함해서 안겹치게 해주시면 됩니다.
-    그 파일이름을 기반으로 db에서 보고서를 요청 후 다운로드할 것입니다.
+    파일 업로드 후 생기는 파일 id를 기반으로 db에서 보고서를 요청 후 다운로드할 것입니다.
 
 """
 async def cveTest(urlCVEList: list, user_id: str):
@@ -49,8 +48,8 @@ async def cveTest(urlCVEList: list, user_id: str):
     
     # 여기에 실제 보고서 생성 로직을 추가하세요.
     await asyncio.sleep(2)  # 이 부분은 삭제하고 해당하는 보고서 생성 함수를 실행하세요.
-    report_title  = "absde" # 예시 report name
+    file_id  = "absde" # 예시 file_id
     
     # 보고서 생성 완료
-    await send_status(user_id, f"The report titled '{report_title}' has been completed.")
+    await send_status(user_id, f"The report '{file_id}' has been completed.")
     await send_status(user_id, f"Completing the test.")

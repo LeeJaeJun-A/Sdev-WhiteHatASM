@@ -26,15 +26,9 @@
         } else if (message.startsWith("{") && message.endsWith("}")) {
           try {
             setCrawlResult(JSON.parse(message));
-            await new Promise((resolve, reject)=>{
-              fastapi("PUT", `/history/${getId()}/${getHistoryID()}`, {status: "Crawling Completed"}, resolve, reject);
-            });
             goto("/test", {replaceState:true});
           } catch (error) {
             console.error("Failed to parse JSON:", error);
-            await new Promise((resolve, reject)=>{
-              fastapi("PUT", `/history/${getId()}/${getHistoryID()}`, {status: "Crawling Failed"}, resolve, reject);
-            });
             goto("/user", {replaceState:true});
           }
         } else {

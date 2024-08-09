@@ -6,11 +6,6 @@
   import fastapi from "$lib/fastapi";
   import { onMount } from "svelte";
 
-  interface HistoryResponse {
-    history_id: string;
-    status: string;
-  }
-
   let urls : string[] = [];
 
   let agreedToTerms = writable(false);
@@ -73,22 +68,6 @@
         });
         return;
       }
-
-      const now = new Date().toISOString();
-      const historyResponse = await new Promise<HistoryResponse>((resolve, reject) => {
-        fastapi(
-          "POST",
-          "/history",
-          {
-            user_id: getId(),
-            history: { time: now, main_url: url, status: "Crawling Started" },
-          },
-          resolve,
-          reject
-        );
-      });
-
-      setHistoryID(historyResponse.history_id);
       goto("/loading");
       
     } catch (error) {

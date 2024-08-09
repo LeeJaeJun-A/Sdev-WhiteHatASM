@@ -4,9 +4,11 @@
   import {
     getCrawlResult,
     getId,
-    setReportName,
-    getreportName,
+    setReportID,
+    getReportID,
     getHistoryID,
+    getCurrentUrl,
+    setHistoryID
   } from "$lib/store";
   import { onMount, onDestroy } from "svelte";
   import { resetNodes } from "$lib/expand";
@@ -15,6 +17,11 @@
   import Swal from "sweetalert2";
   import Tree from "$lib/components/Tree.svelte";
   import fastapi from "$lib/fastapi";
+
+  interface HistoryResponse {
+    history_id: string;
+    status: string;
+  }
 
   let socket: WebSocket | null = null;
   let crawlResult: any = null;
@@ -44,22 +51,25 @@
         console.log("Received WebSocket message:", message);
         if (message.startsWith("Testing") && message.endsWith("completed.")) {
           completedCVE++;
-          const percentage = Math.min(Math.floor((completedCVE / totalCVE) * 100), 100);
+          const percentage = Math.min(
+            Math.floor((completedCVE / totalCVE) * 100),
+            100
+          );
           progressPercentage.set(percentage);
-        } else if (message.startsWith("The report titled")) {
+        } else if (message.startsWith("The report")) {
           const reportTitleMatch = message.match(
-            /The report titled '(.*?)' has been completed\./
+            /The report '(.*?)' has been completed\./
           );
 
           if (reportTitleMatch && reportTitleMatch[1]) {
-            const reportTitle = reportTitleMatch[1];
-            setReportName(reportTitle);
+            const reportID = reportTitleMatch[1];
+            setReportID(reportID);
 
             await new Promise((resolve, reject) => {
               fastapi(
                 "PUT",
                 `/history/${getId()}/${getHistoryID()}`,
-                { file: reportTitle },
+                { file: reportID },
                 resolve,
                 reject
               );
@@ -126,15 +136,27 @@
         fastapi("POST", "/test", { urlCVEList, id }, resolve, reject);
       });
 
-      await new Promise((resolve, reject) => {
-        fastapi(
-          "PUT",
-          `/history/${getId()}/${getHistoryID()}`,
-          { status: "Test Started" },
-          resolve,
-          reject
-        );
-      });
+      const now = new Date().toISOString();
+      const historyResponse = await new Promise<HistoryResponse>(
+        (resolve, reject) => {
+          fastapi(
+            "POST",
+            "/history",
+            {
+              user_id: getId(),
+              history: {
+                time: now,
+                main_url: getCurrentUrl(),
+                status: "Test Started",
+              },
+            },
+            resolve,
+            reject
+          );
+        }
+      );
+
+      setHistoryID(historyResponse.history_id);
     } catch (error) {
       console.error("Failed to connect to WebSocket:", error);
     }
@@ -210,11 +232,27 @@
     }
   }
 
-  function downloadReport() {
-    const reportNmae = getreportName();
+  async function downloadReport() {
+    try {
+      const response = await new Promise<Response>((resolve, reject) => {
+        fastapi("GET", `/report/${getReportID()}`, {}, resolve, reject);
+      });
 
-    // report 요청 api
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      document.body.appendChild(a);
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
   }
+
   onMount(() => {
     initializeSession();
     crawlResult = getCrawlResult();

@@ -26,9 +26,25 @@
   let urlFilter: string = "";
   let statusFilter: string = "";
 
-  function downloadReport(log: LogEntry) {
-    console.log(getId());
-    console.log(log.file);
+  async function downloadReport(log: LogEntry) {
+    try {
+      const response = await new Promise<Response>((resolve, reject) => {
+        fastapi("GET", `/report/${log.file}`, {}, resolve, reject);
+      });
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      document.body.appendChild(a);
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
   }
 
   function filterLogs() {
@@ -124,10 +140,12 @@
       </TableHead>
       <TableBody tableBodyClass="divide-y">
         {#each filteredLogs as log}
-          <TableBodyRow class="text-center">
+          <TableBodyRow class="text-center 4xl:text-lg">
             <TableBodyCell>{log.time}</TableBodyCell>
             <TableBodyCell>{log.main_url}</TableBodyCell>
-            <TableBodyCell>{log.status}</TableBodyCell>
+            <TableBodyCell class={`${log.status === "Test Completed" ? "text-green-500" : "text-red-500"}`}>
+              {log.status}
+            </TableBodyCell>
               <TableBodyCell
                 ><button
                   on:click={() => downloadReport(log)}
