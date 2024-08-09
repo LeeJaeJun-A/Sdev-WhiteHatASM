@@ -7,6 +7,7 @@ export const userMode = writable<string | null>(null);
 export const currentUrl = writable<string | null>(null);
 export const crawlResult = writable<any>(null);
 export const reportName = writable<string | null>(null);
+export const historyID = writable<string | null>(null);
 
 export const getId = () => {
   let currentId: string | null = null;
@@ -38,6 +39,12 @@ export const getreportName = () => {
   return currentReportName;
 };
 
+export const getHistoryID = () => {
+  let currentHistoryID: any = null;
+  historyID.subscribe((value) => (currentHistoryID = value))();
+  return currentHistoryID;
+};
+
 export const setId = (newId: string | null) => {
   id.set(newId);
 };
@@ -64,4 +71,8 @@ export const setCrawlResult = (newCrawlResult: any) => {
 
 export const setReportName = (newReportName: any) => {
   reportName.set(newReportName);
+};
+
+export const setHistoryID = (newHistoryID: any) => {
+  historyID.set(newHistoryID);
 };

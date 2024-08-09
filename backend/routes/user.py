@@ -6,6 +6,7 @@ from datetime import datetime
 from backend.database.session import get_database
 from backend.database.models import User
 from backend.user.lock_management import unlock_account, lock_account
+from backend.database.mongodb_async import history_collection
 from backend.config import DEFAULT_ROOT_ACCOUNT_ID
 import bcrypt
 
@@ -42,7 +43,7 @@ class UserRequest(BaseModel):
     id: str
 
 
-def create_user_in_db(user_data: UserCreate, database: Session) -> User:
+async def create_user_in_db(user_data: UserCreate, database: Session) -> User:
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(user_data.password.encode("utf-8"), salt)
     new_user = User(
@@ -55,11 +56,14 @@ def create_user_in_db(user_data: UserCreate, database: Session) -> User:
     database.add(new_user)
     database.commit()
     database.refresh(new_user)
+
+    new_document = {"user_id": user_data.id, "histories": []}
+    await history_collection.insert_one(new_document)
     return new_user
 
 
 @router.post("/user", response_model=UserCreateResponse)
-def create_user(user_data: UserCreate, database: Session = Depends(get_database)):
+async def create_user(user_data: UserCreate, database: Session = Depends(get_database)):
     existing_user = database.query(User).filter(User.id == user_data.id).one_or_none()
     if existing_user:
         raise HTTPException(
@@ -67,12 +71,12 @@ def create_user(user_data: UserCreate, database: Session = Depends(get_database)
             detail="User with this ID already exists.",
         )
 
-    new_user = create_user_in_db(user_data, database)
+    new_user = await create_user_in_db(user_data, database)
     return UserCreateResponse(id=new_user.id, role=new_user.role)
 
 
 @router.delete("/user/{id}")
-def delete_user(id: str, database: Session = Depends(get_database)):
+async def delete_user(id: str, database: Session = Depends(get_database)):
     user = database.query(User).filter(User.id == id).one_or_none()
     if not user:
         raise HTTPException(
@@ -87,6 +91,9 @@ def delete_user(id: str, database: Session = Depends(get_database)):
 
     database.delete(user)
     database.commit()
+    
+    await history_collection.delete_one({"user_id": id})
+
     return {"detail": f"User {id} has been deleted."}
 
 

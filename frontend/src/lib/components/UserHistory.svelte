@@ -8,55 +8,87 @@
     TableHeadCell,
   } from "flowbite-svelte";
   import { getId } from "$lib/store";
+  import { onMount } from "svelte";
+  import fastapi from "$lib/fastapi";
 
   interface LogEntry {
-    date: string;
-    url: string;
+    time: string;
+    main_url: string;
     status: string;
+    file?: string;
+    _id: string;
   }
 
-  // Mock data for demonstration
-  let logs : LogEntry[] = [
-    {
-      date: "2024-08-01",
-      url: "https://www.naver.com",
-      status: "Completed",
-    },
-    {
-      date: "2024-08-02",
-      url: "https://www.google.com",
-      status: "Stopped",
-    },
-    {
-      date: "2024-08-02",
-      url: "https://www.shinnam12324.com",
-      status: "Failed to crawl",
-    },
-    // Add more sample data here
-  ];
+  let logs: LogEntry[] = [];
 
   let filteredLogs: LogEntry[] = [...logs];
   let dateFilter: string = "";
   let urlFilter: string = "";
   let statusFilter: string = "";
 
-  function downloadReport(log : LogEntry) {
+  function downloadReport(log: LogEntry) {
     console.log(getId());
-    console.log(log.date);
-    console.log(log.url);
+    console.log(log.file);
   }
 
   function filterLogs() {
     filteredLogs = logs.filter((log) => {
       return (
-        (!dateFilter || log.date.includes(dateFilter)) &&
+        (!dateFilter || log.time.includes(dateFilter)) &&
         (!urlFilter ||
-          log.url.toLowerCase().includes(urlFilter.toLowerCase())) &&
+          log.main_url.toLowerCase().includes(urlFilter.toLowerCase())) &&
         (!statusFilter ||
           log.status.toLowerCase().includes(statusFilter.toLowerCase()))
       );
     });
   }
+
+  async function fetchLogs(user_id: string) {
+    try {
+      const response = await new Promise<any>((resolve, reject) => {
+        fastapi(
+          "GET",
+          `/history/${user_id}`,
+          {},
+          (data) => resolve(data),
+          (error) => reject(error)
+        );
+      });
+
+      logs = response;
+      filteredLogs = [...logs];
+    } catch (err) {
+      console.error("Error getting history: ", err);
+    }
+  }
+
+  async function deleteLog(history_id: string) {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        fastapi(
+          "DELETE",
+          `/history/${getId()}/${history_id}`,
+          {},
+          () => resolve(),
+          (error) => reject(error)
+        );
+      });
+
+      logs = logs.filter((log) => log._id !== history_id);
+      filteredLogs = [...logs];
+    } catch (err) {
+      console.error("Error deleting log: ", err);
+    }
+  }
+
+  onMount(() => {
+    const user_id = getId();
+    if (user_id) {
+      fetchLogs(user_id);
+    } else {
+      console.error("User ID not found");
+    }
+  });
 </script>
 
 <div class="flex w-full select-none h-full bg-gray-50">
@@ -93,15 +125,19 @@
       <TableBody tableBodyClass="divide-y">
         {#each filteredLogs as log}
           <TableBodyRow class="text-center">
-            <TableBodyCell>{log.date}</TableBodyCell>
-            <TableBodyCell>{log.url}</TableBodyCell>
+            <TableBodyCell>{log.time}</TableBodyCell>
+            <TableBodyCell>{log.main_url}</TableBodyCell>
             <TableBodyCell>{log.status}</TableBodyCell>
+              <TableBodyCell
+                ><button
+                  on:click={() => downloadReport(log)}
+                  class="text-gray-500 disabled:text-blue-700 cursor-not-allowed disabled:cursor-pointer"
+                  disabled={log.file !== null}>Download</button
+                ></TableBodyCell
+              >
             <TableBodyCell
-              ><button on:click={() => downloadReport(log)} class="text-blue-700">Download</button
-              ></TableBodyCell
-            >
-            <TableBodyCell
-              ><button class="text-red-500">Delete</button
+              ><button class="text-red-500" on:click={() => deleteLog(log._id)}
+                >Delete</button
               ></TableBodyCell
             >
           </TableBodyRow>

@@ -1,7 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { initializeSession } from "$lib/auth";
-  import { getCrawlResult, getId, setReportName, getreportName } from "$lib/store";
+  import {
+    getCrawlResult,
+    getId,
+    setReportName,
+    getreportName,
+    getHistoryID,
+  } from "$lib/store";
   import { onMount, onDestroy } from "svelte";
   import { resetNodes } from "$lib/expand";
   import { urlCVE, toggleCveForUrl, resetUrlCVE } from "$lib/selectCVE";
@@ -23,7 +29,7 @@
 
   const baseUrl = import.meta.env.VITE_FASTAPI_URL || "http://127.0.0.1:8000";
 
-  function connectWebSocket() {
+  async function connectWebSocket() {
     return new Promise<void>((resolve, reject) => {
       const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/ws/${getId()}`;
       console.log("Connecting to WebSocket URL: ", socketUrl);
@@ -33,12 +39,12 @@
         resolve();
       };
 
-      socket.onmessage = (event) => {
+      socket.onmessage = async (event) => {
         const message = event.data;
         console.log("Received WebSocket message:", message);
         if (message.startsWith("Testing") && message.endsWith("completed.")) {
           completedCVE++;
-          const percentage = Math.min((completedCVE / totalCVE) * 100, 100);
+          const percentage = Math.min(Math.floor((completedCVE / totalCVE) * 100), 100);
           progressPercentage.set(percentage);
         } else if (message.startsWith("The report titled")) {
           const reportTitleMatch = message.match(
@@ -48,6 +54,16 @@
           if (reportTitleMatch && reportTitleMatch[1]) {
             const reportTitle = reportTitleMatch[1];
             setReportName(reportTitle);
+
+            await new Promise((resolve, reject) => {
+              fastapi(
+                "PUT",
+                `/history/${getId()}/${getHistoryID()}`,
+                { file: reportTitle },
+                resolve,
+                reject
+              );
+            });
           }
         }
 
@@ -56,6 +72,17 @@
         if (message === "Completing the test.") {
           isTestStarted.set(false);
           isTestCompleted.set(true);
+
+          await new Promise((resolve, reject) => {
+            fastapi(
+              "PUT",
+              `/history/${getId()}/${getHistoryID()}`,
+              { status: "Test Completed" },
+              resolve,
+              reject
+            );
+          });
+
           if (socket) {
             socket.close();
             socket = null;
@@ -95,18 +122,19 @@
       isTestCompleted.set(false);
       await connectWebSocket();
 
-      const params = { urlCVEList, id };
-      fastapi(
-        "POST",
-        "/test",
-        params,
-        (response) => {
-          console.log("Test started: ", response.data);
-        },
-        (error) => {
-          console.error("Error starting test: ", error);
-        }
-      );
+      await new Promise((resolve, reject) => {
+        fastapi("POST", "/test", { urlCVEList, id }, resolve, reject);
+      });
+
+      await new Promise((resolve, reject) => {
+        fastapi(
+          "PUT",
+          `/history/${getId()}/${getHistoryID()}`,
+          { status: "Test Started" },
+          resolve,
+          reject
+        );
+      });
     } catch (error) {
       console.error("Failed to connect to WebSocket:", error);
     }
@@ -137,26 +165,38 @@
     });
   }
 
-  function handleCancelDuringTest() {
-    Swal.fire({
-      icon: "warning",
-      title: "Are you sure?",
-      html: "지금까지의 검사 내용을 모두 잃게 됩니다.<br>정말 검사를 종료하시겠습니까?",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      reverseButtons: true,
-      customClass: {
-        confirmButton: "swal-button",
-        cancelButton: "swal-button",
-      },
-      buttonsStyling: false,
-    }).then((result) => {
+  async function handleCancelDuringTest() {
+    try {
+      const result = await Swal.fire({
+        icon: "warning",
+        title: "Are you sure?",
+        html: "지금까지의 검사 내용을 모두 잃게 됩니다.<br>정말 검사를 종료하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        reverseButtons: true,
+        customClass: {
+          confirmButton: "swal-button",
+          cancelButton: "swal-button",
+        },
+        buttonsStyling: false,
+      });
+
       if (result.isConfirmed) {
         if (socket) {
           socket.close();
           socket = null;
         }
+
+        await new Promise((resolve, reject) => {
+          fastapi(
+            "PUT",
+            `/history/${getId()}/${getHistoryID()}`,
+            { status: "Test Canceled" },
+            resolve,
+            reject
+          );
+        });
 
         logMessages.set([]);
 
@@ -165,10 +205,12 @@
         isTestStarted.set(false);
         isTestCompleted.set(false);
       }
-    });
+    } catch (error) {
+      console.error("Error during cancel operation:", error);
+    }
   }
 
-  function downloadReport(){
+  function downloadReport() {
     const reportNmae = getreportName();
 
     // report 요청 api

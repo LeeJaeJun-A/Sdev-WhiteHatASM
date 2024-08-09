@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
-  import { getCurrentUrl, getId, setCrawlResult } from "$lib/store";
+  import { getCurrentUrl, getHistoryID, getId, setCrawlResult } from "$lib/store";
   import fastapi from "$lib/fastapi";
 
   let socket: WebSocket | null = null;
@@ -10,7 +10,7 @@
 
   const baseUrl = import.meta.env.VITE_FASTAPI_URL || "http://127.0.0.1:8000";
 
-  function connectWebSocket() {
+  async function connectWebSocket() {
     return new Promise<void>((resolve, reject) => {
       const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/ws/${getId()}`;
       socket = new WebSocket(socketUrl);
@@ -19,16 +19,22 @@
         resolve();
       };
 
-      socket.onmessage = (event) => {
+      socket.onmessage = async (event) => {
         const message = event.data;
         if (message === "Full crawling completed") {
           isLoading = false;
         } else if (message.startsWith("{") && message.endsWith("}")) {
           try {
             setCrawlResult(JSON.parse(message));
+            await new Promise((resolve, reject)=>{
+              fastapi("PUT", `/history/${getId()}/${getHistoryID()}`, {status: "Crawling Completed"}, resolve, reject);
+            });
             goto("/test", {replaceState:true});
           } catch (error) {
             console.error("Failed to parse JSON:", error);
+            await new Promise((resolve, reject)=>{
+              fastapi("PUT", `/history/${getId()}/${getHistoryID()}`, {status: "Crawling Failed"}, resolve, reject);
+            });
             goto("/user", {replaceState:true});
           }
         } else {

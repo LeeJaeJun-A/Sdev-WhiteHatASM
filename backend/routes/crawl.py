@@ -7,7 +7,7 @@ class URLRequest(BaseModel):
     url: str
 
 
-class crawlRequest(BaseModel):
+class CrawlRequest(BaseModel):
     url: str
     id: str
 
@@ -23,6 +23,6 @@ async def validate_url_endpoint(request: URLRequest):
 
 
 @router.post("/crawl")
-async def crawling(request: crawlRequest, background_tasks: BackgroundTasks):
+async def crawling(request: CrawlRequest, background_tasks: BackgroundTasks):
     background_tasks.add_task(crawl_url, request.url, request.id)
     return {"status": "Crawl started"}

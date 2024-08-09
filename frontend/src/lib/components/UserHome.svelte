@@ -1,23 +1,40 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import { currentUrl, getCurrentUrl, setCurrentUrl } from "$lib/store";
+  import { currentUrl, getCurrentUrl, getId, setCurrentUrl, setHistoryID } from "$lib/store";
   import { goto } from "$app/navigation";
   import Swal from "sweetalert2";
   import fastapi from "$lib/fastapi";
   import { onMount } from "svelte";
 
-  // hardcoding
-  let urls = [
-    "https://www.naver.com",
-    "https://www.google.com",
-    "https://www.youtube.com",
-  ];
-  // hardcoding end
+  interface HistoryResponse {
+    history_id: string;
+    status: string;
+  }
+
+  let urls : string[] = [];
 
   let agreedToTerms = writable(false);
 
   function handleCheck() {
     agreedToTerms.update((value) => !value);
+  }
+
+  async function fetchURLs(){
+    try {
+      const response = await new Promise<any>((resolve, reject) => {
+        fastapi(
+          "GET",
+          `/history/${getId()}/recent`,
+          {},
+          (data) => resolve(data),
+          (error) => reject(error)
+        );
+      });
+
+      urls = response;
+    } catch (err) {
+      console.error("Error getting history: ", err);
+    }
   }
 
   async function startInspection() {
@@ -41,35 +58,51 @@
       return;
     }
 
-    fastapi(
-      "POST",
-      "/validate-url",
-      { url },
-      (response) => {
-        if (response.valid === false) {
-          Swal.fire({
-            icon: "error",
-            title: "Invalid URL",
-            text: "유효하지 않은 URL 입니다.",
-          });
-          return;
-        } else if (response.valid === true) {
-          // 최근 URL history에 추가하기. Crawling start
-          goto("/loading");
+    try {
+      const validationResponse = await new Promise<{ valid: boolean }>(
+        (resolve, reject) => {
+          fastapi("POST", "/validate-url", { url }, resolve, reject);
         }
-      },
-      (error) => {
+      );
+
+      if (validationResponse.valid === false) {
         Swal.fire({
           icon: "error",
           title: "Invalid URL",
-          text: `${error}`,
+          text: "유효하지 않은 URL 입니다.",
         });
+        return;
       }
-    );
+
+      const now = new Date().toISOString();
+      const historyResponse = await new Promise<HistoryResponse>((resolve, reject) => {
+        fastapi(
+          "POST",
+          "/history",
+          {
+            user_id: getId(),
+            history: { time: now, main_url: url, status: "Crawling Started" },
+          },
+          resolve,
+          reject
+        );
+      });
+
+      setHistoryID(historyResponse.history_id);
+      goto("/loading");
+      
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error}`,
+      });
+    }
   }
 
   onMount(() => {
     setCurrentUrl("");
+    fetchURLs();
   });
 </script>
 
