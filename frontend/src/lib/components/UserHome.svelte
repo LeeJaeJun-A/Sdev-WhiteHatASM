@@ -79,9 +79,9 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
     setCurrentUrl("");
-    fetchURLs();
+    await fetchURLs();
   });
 </script>
 

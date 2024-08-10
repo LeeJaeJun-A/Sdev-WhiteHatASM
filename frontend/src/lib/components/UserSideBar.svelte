@@ -9,7 +9,7 @@
   import { ChartPieSolid } from "flowbite-svelte-icons";
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import { setUserMode } from "$lib/store";
+  import { getId, setUserMode } from "$lib/store";
 
   let showSideBar: Writable<boolean> = writable(true);
 
@@ -45,7 +45,7 @@
           <div class="flex justify-between w-full" style="height: 5%;">
             <div class="flex truncate items-center space-x-2">
               <img src="/shinnam.png" alt="logo" class="h-full" />
-              <p class="4xl:text-3xl">ID</p>
+              <p class="4xl:text-3xl">{getId()}</p>
             </div>
             <button on:click={toggleSideBar}>
               <svg

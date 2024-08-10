@@ -4,6 +4,7 @@
   import { EyeOutline, EyeSlashOutline } from "flowbite-svelte-icons";
   import Swal from "sweetalert2";
   import fastapi from "$lib/fastapi";
+  import { setId } from "$lib/store";
 
   let id: Writable<string> = writable("");
   let password: string = "";
@@ -28,8 +29,10 @@
             showConfirmButton: false,
           }).then(() => {
             if(data.role === "admin"){
+                setId($id);
                 goto("/admin", {replaceState:true});
             }else{
+                setId($id);
                 goto("/user", {replaceState:true});
             }
           });
