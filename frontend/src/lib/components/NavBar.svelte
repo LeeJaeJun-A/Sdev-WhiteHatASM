@@ -15,8 +15,8 @@
       <a href="/" class="hover:text-gray-400 4xl:text-2xl select-none">Home</a>
     </li>
     <li>
-      <a href="/about" class="hover:text-gray-400 4xl:text-2xl select-none"
-        >About</a
+      <a href="/FAQ" class="hover:text-gray-400 4xl:text-2xl select-none"
+        >FAQ</a
       >
     </li>
     <li>

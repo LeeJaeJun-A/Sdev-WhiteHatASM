@@ -18,7 +18,7 @@
       <p class="text-lg fade-in delay-1000 4xl:text-2xl">"자동화된 보안 검토로 시간과 인력을 절약하고</p>
       <p class="text-lg pb-5 fade-in delay-1000 4xl:text-2xl 4xl:pb-10">서브 도메인과 CVE 취약점에 효과적으로 대응하세요."</p>
       <button class="w-32 h-10 border bg-gray-50 rounded-full shadow-md fade-in delay-1500 4xl:text-2xl 4xl:w-52 4xl:h-16"
-      on:click={()=>goto("/about")}
+      on:click={()=>goto("/FAQ")}
       >
         Learn More
       </button>
