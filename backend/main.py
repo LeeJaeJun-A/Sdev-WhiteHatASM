@@ -24,7 +24,7 @@ app.include_router(report.router, tags=["report"])
 app.include_router(contact.router, tags=["contact"])
 
 # Define CORS settings to allow requests from specified origins
-origins = ["http://localhost:5173"]
+origins = ["http://localhost:5173", "http://localhost:4173"]
 
 app.add_middleware(
     CORSMiddleware,
