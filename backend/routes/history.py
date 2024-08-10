@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from pymongo import DESCENDING
 from typing import List, Optional
-from backend.database.mongodb_async import history_collection
+from backend.database.mongodb import history_collection
 import uuid
 
 router = APIRouter()
@@ -27,8 +27,8 @@ class UpdateHistoryRequest(BaseModel):
 
 
 @router.get("/history/{user_id}")
-async def get_histories(user_id: str):
-    user_history = await history_collection.find_one(
+def get_histories(user_id: str):
+    user_history = history_collection.find_one(
         {"user_id": user_id}, {"_id": 0, "histories": 1}
     )
     if user_history is None:
@@ -37,14 +37,14 @@ async def get_histories(user_id: str):
 
 
 @router.get("/history/{user_id}/recent", response_model=List[str])
-async def get_recent_histories(user_id: str):
+def get_recent_histories(user_id: str):
     cursor = (
         history_collection.find({"user_id": user_id}, {"_id": 0, "histories": 1})
         .sort("histories.time", DESCENDING)
         .limit(10)
     )
 
-    user_history = await cursor.to_list(length=10)
+    user_history = list(cursor)
 
     if not user_history:
         raise HTTPException(status_code=404, detail="History not found")
@@ -61,15 +61,15 @@ async def get_recent_histories(user_id: str):
 
 
 @router.post("/history")
-async def create_history(request: CreateHistoryRequest):
+def create_history(request: CreateHistoryRequest):
     history = request.history.model_dump()
     history["_id"] = str(uuid.uuid4())  # Generate a new UUID and convert it to a string
     user_id = request.user_id
 
-    user_history = await history_collection.find_one({"user_id": user_id})
+    user_history = history_collection.find_one({"user_id": user_id})
 
     if user_history:
-        update_result = await history_collection.update_one(
+        update_result = history_collection.update_one(
             {"user_id": user_id}, {"$push": {"histories": history}}
         )
         if update_result.matched_count == 0:
@@ -80,7 +80,7 @@ async def create_history(request: CreateHistoryRequest):
 
 
 @router.put("/history/{user_id}/{history_id}")
-async def update_history(user_id: str, history_id: str, request: UpdateHistoryRequest):
+def update_history(user_id: str, history_id: str, request: UpdateHistoryRequest):
     update_fields = {}
     if request.status is not None:
         update_fields["status"] = request.status
@@ -90,7 +90,7 @@ async def update_history(user_id: str, history_id: str, request: UpdateHistoryRe
     if not update_fields:
         raise HTTPException(status_code=400, detail="No fields to update")
 
-    result = await history_collection.update_one(
+    result = history_collection.update_one(
         {"user_id": user_id, "histories._id": history_id},
         {"$set": {f"histories.$.{key}": value for key, value in update_fields.items()}},
     )
@@ -102,8 +102,8 @@ async def update_history(user_id: str, history_id: str, request: UpdateHistoryRe
 
 
 @router.delete("/history/{user_id}/{history_id}")
-async def delete_history(user_id: str, history_id: str):
-    result = await history_collection.update_one(
+def delete_history(user_id: str, history_id: str):
+    result = history_collection.update_one(
         {"user_id": user_id}, {"$pull": {"histories": {"_id": history_id}}}
     )
 

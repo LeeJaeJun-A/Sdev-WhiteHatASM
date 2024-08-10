@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Response
-from backend.database.mongodb_sync import fs
+from backend.database.mongodb import fs
 import gridfs
 from bson import ObjectId
 

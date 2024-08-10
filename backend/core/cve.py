@@ -1,5 +1,5 @@
 import json
-from backend.database.mongodb_sync import cve_collection
+from backend.database.mongodb import cve_collection
 
 json_file_path = 'backend/core/json/cve.json'
 

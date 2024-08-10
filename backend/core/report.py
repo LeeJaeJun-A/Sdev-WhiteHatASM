@@ -1,4 +1,4 @@
-from backend.database.mongodb_sync import fs
+from backend.database.mongodb import fs
 
 file_path = "path/to/your/file.txt"
 with open(file_path, "rb") as file:

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from backend.database.mongodb_async import contact_collection
+from backend.database.mongodb import contact_collection
 from uuid import uuid4
 from typing import List
 
@@ -13,19 +13,19 @@ class ContactRequest(BaseModel):
     phone: str
     message: str
     is_read: bool = False
-    
+
 
 class ContactID(BaseModel):
     id: str
 
 
 @router.post("/contact")
-async def send_inquiry(contact: ContactRequest):
+def send_inquiry(contact: ContactRequest):
     new_id = str(uuid4())
     contact_dict = contact.model_dump()
     contact_dict["_id"] = new_id
 
-    result = await contact_collection.insert_one(contact_dict)
+    result = contact_collection.insert_one(contact_dict)
     if not result.acknowledged:
         raise HTTPException(status_code=500, detail="Failed to insert inquiry")
 
@@ -33,10 +33,10 @@ async def send_inquiry(contact: ContactRequest):
 
 
 @router.get("/contact")
-async def get_customer_inquiries():
+def get_customer_inquiries():
     cursor = contact_collection.find({"is_read": False})
     inquiries = []
-    async for inquiry in cursor:
+    for inquiry in cursor:
         inquiry["_id"] = str(inquiry["_id"])
         inquiries.append(inquiry)
 
@@ -44,8 +44,8 @@ async def get_customer_inquiries():
 
 
 @router.put("/contact/read")
-async def mark_as_read(update: ContactID):
-    result = await contact_collection.update_one(
+def mark_as_read(update: ContactID):
+    result = contact_collection.update_one(
         {"_id": update.id}, {"$set": {"is_read": True}}
     )
 
@@ -59,8 +59,8 @@ async def mark_as_read(update: ContactID):
 
 
 @router.delete("/contact")
-async def delete_inquiry(delete_request: ContactID):
-    result = await contact_collection.delete_one({"_id": delete_request.id})
+def delete_inquiry(delete_request: ContactID):
+    result = contact_collection.delete_one({"_id": delete_request.id})
 
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Inquiry not found")

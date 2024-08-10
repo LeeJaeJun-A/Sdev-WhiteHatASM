@@ -1,20 +1,16 @@
 # Use the official Python image as a parent image
-FROM python:3.10.8
+FROM python:3.12-slim
 
 # Set the working directory inside the container
-WORKDIR /app
-
-COPY . /app/backend
-
 WORKDIR /app/backend
+
+# Copy the entire backend directory into the container
+COPY . /app/backend
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip
 COPY ./requirements.txt ./requirements.txt
-RUN pip install -r requirements.txt
-
-# Copy the entire application into the container
-
+RUN pip install --no-cache-dir -r requirements.txt
 
 ENV PYTHONPATH=/app
 

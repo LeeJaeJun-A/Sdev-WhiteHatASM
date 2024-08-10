@@ -6,9 +6,13 @@ from datetime import datetime
 from backend.database.session import get_database
 from backend.database.models import User
 from backend.user.lock_management import unlock_account, lock_account
-from backend.database.mongodb_async import history_collection
+from backend.database.mongodb import history_collection
 from backend.config import DEFAULT_ROOT_ACCOUNT_ID
 import bcrypt
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -43,27 +47,47 @@ class UserRequest(BaseModel):
     id: str
 
 
-async def create_user_in_db(user_data: UserCreate, database: Session) -> User:
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(user_data.password.encode("utf-8"), salt)
-    new_user = User(
-        id=user_data.id,
-        password=hashed_password.decode("utf-8"),
-        salt=salt.decode("utf-8"),
-        role=user_data.role,
-        authorizer=user_data.authorizer,
-    )
-    database.add(new_user)
-    database.commit()
-    database.refresh(new_user)
+def create_user_in_db(user_data: UserCreate, database: Session) -> User:
+    try:
+        # 비밀번호 해싱
+        logger.info(f"Generating salt and hashing password for user: {user_data.id}")
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(user_data.password.encode("utf-8"), salt)
 
-    new_document = {"user_id": user_data.id, "histories": []}
-    await history_collection.insert_one(new_document)
-    return new_user
+        # 새로운 유저 생성
+        logger.info(f"Creating new user in database: {user_data.id}")
+        new_user = User(
+            id=user_data.id,
+            password=hashed_password.decode("utf-8"),
+            salt=salt.decode("utf-8"),
+            role=user_data.role,
+            authorizer=user_data.authorizer,
+        )
+        database.add(new_user)
+        database.commit()
+        logger.info(f"New user created and committed to database: {user_data.id}")
+
+        # 유저 데이터 새로고침
+        database.refresh(new_user)
+        logger.info(f"User data refreshed from database: {user_data.id}")
+
+        # MongoDB에 기록 추가
+        new_document = {"user_id": user_data.id, "histories": []}
+        logger.info(f"Inserting history document in MongoDB for user: {user_data.id}")
+        history_collection.insert_one(new_document)
+        logger.info(f"History document inserted in MongoDB for user: {user_data.id}")
+
+        return new_user
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while creating user {user_data.id}: {e}", exc_info=True
+        )
+        raise e
 
 
 @router.post("/user", response_model=UserCreateResponse)
-async def create_user(user_data: UserCreate, database: Session = Depends(get_database)):
+def create_user(user_data: UserCreate, database: Session = Depends(get_database)):
     existing_user = database.query(User).filter(User.id == user_data.id).one_or_none()
     if existing_user:
         raise HTTPException(
@@ -71,12 +95,12 @@ async def create_user(user_data: UserCreate, database: Session = Depends(get_dat
             detail="User with this ID already exists.",
         )
 
-    new_user = await create_user_in_db(user_data, database)
+    new_user = create_user_in_db(user_data, database)
     return UserCreateResponse(id=new_user.id, role=new_user.role)
 
 
 @router.delete("/user/{id}")
-async def delete_user(id: str, database: Session = Depends(get_database)):
+def delete_user(id: str, database: Session = Depends(get_database)):
     user = database.query(User).filter(User.id == id).one_or_none()
     if not user:
         raise HTTPException(
@@ -91,8 +115,8 @@ async def delete_user(id: str, database: Session = Depends(get_database)):
 
     database.delete(user)
     database.commit()
-    
-    await history_collection.delete_one({"user_id": id})
+
+    history_collection.delete_one({"user_id": id})
 
     return {"detail": f"User {id} has been deleted."}
 
