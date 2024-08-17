@@ -32,15 +32,15 @@
     style="height: 92%;"
   >
     <div class="w-full h-full flex justify-center items-center">
-      <table class="w-5/6 border border-gray-300 rounded-lg shadow-lg">
+      <table class="w-5/6 border border-gray-300 rounded-lg shadow-lg" style="height: 90%;">
         <tbody>
           {#each FAQs as faq, index}
             <tr class="cursor-pointer hover:bg-gray-50 transition-colors" on:click={() => toggleDetail(index)}>
-              <td class="border-b border-gray-300 p-3 text-gray-700 font-semibold">{faq.question}</td>
+              <td class="border-b border-gray-300 p-3 text-gray-700 font-semibold 4xl:text-2xl 4xl:p-5">{faq.question}</td>
             </tr>
             {#if expanded == index}
               <tr>
-                <td class="p-3 bg-gray-100 text-gray-600">{faq.answer}</td>
+                <td class="p-3 bg-gray-100 text-gray-600 4xl:text-2xl 4xl:p-5">{faq.answer}</td>
               </tr>
             {/if}
           {/each}

@@ -28,7 +28,7 @@ def login(user_id: str, password: str, database: Session) -> Optional[dict]:
     if user is None:
         return {
             "status": "fail",
-            "message": "User not found.",
+            "message": "User not found",
             "remaining_attempts": 0,
         }
 

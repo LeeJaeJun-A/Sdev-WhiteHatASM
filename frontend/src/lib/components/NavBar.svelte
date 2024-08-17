@@ -6,10 +6,10 @@
   class="flex justify-between items-center p-2 border-gray-200 bg-gray-50 max-h-20 4xl:p-4"
   style="height: 8%"
 >
-  <div class="flex items-center space-x-2 h-full">
+  <a href="/" class="flex items-center space-x-2 h-full">
     <img src="/shinnam.png" class="h-full" alt="logo" />
     <span class="text-xl font-semibold select-none 4xl:text-3xl">Shinnam</span>
-  </div>
+  </a>
   <ul class="flex space-x-20 4xl:space-x-40">
     <li>
       <a href="/" class="hover:text-gray-400 4xl:text-2xl select-none">Home</a>

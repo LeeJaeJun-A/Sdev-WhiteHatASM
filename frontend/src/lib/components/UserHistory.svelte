@@ -142,7 +142,7 @@
           class="rounded px-1 py-2 text-sm shadow-sm border-none 4xl:text-lg focus:ring-gray-500"
           placeholder="From Date"
         />
-        <p>To</p>
+        <p class="4xl:text-lg">To</p>
         <input
           type="date"
           bind:value={dateTo}

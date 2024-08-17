@@ -28,17 +28,20 @@
             timer: 1000,
             showConfirmButton: false,
           }).then(() => {
-            if(data.role === "admin"){
-                setId($id);
-                goto("/admin", {replaceState:true});
-            }else{
-                setId($id);
-                goto("/user", {replaceState:true});
+            if (data.role === "admin") {
+              setId($id);
+              goto("/admin", { replaceState: true });
+            } else {
+              setId($id);
+              goto("/user", { replaceState: true });
             }
           });
         },
         (error) => {
-          if (error.detail === "User not found." || error.detail === "Invalid Access") {
+          if (
+            error.detail === "User not found" ||
+            error.detail === "Invalid Access"
+          ) {
             Swal.fire({
               icon: "error",
               title: "Login Failed",
@@ -201,7 +204,7 @@
       <form
         class="w-3/4 h-2/3 rounded-xl shadow-lg border flex flex-col items-center justify-center space-y-10 4xl:space-y-20"
         on:submit|preventDefault={handleLogin}
-        >
+      >
         <div class="w-5/6">
           <label
             for="id"
@@ -220,10 +223,10 @@
           />
         </div>
         <div class="w-5/6">
-          <div class="flex items-center justify-between mb-2 text-sm 4xl:mb-4 4xl:text-2xl ">
-            <label
-              for="password"
-              class="font-medium text-gray-900"
+          <div
+            class="flex items-center justify-between mb-2 text-sm 4xl:mb-4 4xl:text-2xl"
+          >
+            <label for="password" class="font-medium text-gray-900"
               >비밀번호</label
             >
             <div>

@@ -52,7 +52,7 @@
         if (message.startsWith("Testing") && message.endsWith("completed.")) {
           completedCVE++;
           const percentage = Math.min(
-            Math.floor((completedCVE / totalCVE) * 100),
+            Math.floor((completedCVE / (totalCVE + 1)) * 100),
             100
           );
           progressPercentage.set(percentage);
@@ -60,8 +60,9 @@
           const reportTitleMatch = message.match(
             /The report '(.*?)' has been completed\./
           );
-
+          
           if (reportTitleMatch && reportTitleMatch[1]) {
+            progressPercentage.set(100);
             const reportID = reportTitleMatch[1];
             setReportID(reportID);
 

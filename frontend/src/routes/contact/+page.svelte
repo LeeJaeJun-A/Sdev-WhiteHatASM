@@ -13,6 +13,7 @@
 
   let emailError = writable<string | null>(null);
   let phoneError = writable<string | null>(null);
+  let messageError = writable<string | null>(null);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRegex = /^010-\d{4}-\d{4}$/;
@@ -36,6 +37,13 @@
       valid = false;
     } else {
       phoneError.set(null);
+    }
+
+    if (!$message.trim()) {
+      messageError.set("메시지를 입력해 주세요.");
+      valid = false;
+    } else {
+      messageError.set(null);
     }
 
     if (valid) {
@@ -68,6 +76,12 @@
       }
     }
   }
+
+  function handleEnterKey(event: KeyboardEvent): void {
+    if (event.key === "Enter") {
+      handleSubmit(event);
+    }
+  }
 </script>
 
 <main class="bg-white w-screen h-screen">
@@ -79,21 +93,21 @@
     <div class="w-full h-full flex flex-col justify-center items-center">
       <Contact class="w-1/3">
         <p
-          class="w-1/3 text-4xl flex justify-center items-center font-semibold 4xl:text-6xl max-h-24"
-          style="height: 10%"
+          class="w-1/3 text-4xl flex justify-center items-center font-semibold 4xl:text-6xl max-h-20"
+          style="height: 8%"
         >
           Contact Us
         </p>
         <p
           class="text-center text-gray-500 w-1/3 flex justify-center items-center 4xl:text-2xl max-h-24 text-sm"
-          style="height: 10%;"
+          style="height: 9%;"
         >
           문제가 있거나 계정을 얻고 싶거나 비밀번호를 까먹었을 때,<br />
           또는 기타 문의사항이 있으시면 언제든지 연락해 주세요.
         </p>
         <form
           on:submit={handleSubmit}
-          class="space-y-2 flex text-sm flex-col justify-center items-center w-1/3 4xl:space-y-7"
+          class="space-y-2 flex text-sm flex-col justify-center items-center w-1/3 4xl:space-y-7 pt-3"
           style="height: 78%;"
         >
           <div class="w-full">
@@ -106,10 +120,11 @@
               placeholder="example@google.com"
               bind:value={$email}
               class="w-full 4xl:text-xl"
+              on:keydown={handleEnterKey}
               required
             />
             {#if $emailError}
-              <p class="text-red-500 text-sm">{$emailError}</p>
+              <p class="text-red-500 text-xs 4xl:text-base">{$emailError}</p>
             {/if}
           </div>
           <div class="w-full">
@@ -122,10 +137,11 @@
               placeholder="010-1234-5678"
               bind:value={$phone}
               class="w-full 4xl:text-xl"
+              on:keydown={handleEnterKey}
               required
             />
             {#if $phoneError}
-              <p class="text-red-500 text-sm">{$phoneError}</p>
+              <p class="text-red-500 text-xs 4xl:text-base">{$phoneError}</p>
             {/if}
           </div>
           <div class="w-full">
@@ -138,6 +154,7 @@
               placeholder="도와드릴 사항을 알려주세요"
               bind:value={$title}
               class="w-full 4xl:text-xl"
+              on:keydown={handleEnterKey}
               required
             />
           </div>
@@ -151,11 +168,14 @@
               maxlength="600"
               class="w-full h-32 resize-none overflow-auto 4xl:h-96 4xl:text-xl"
             />
-            <p class="text-gray-500 text-sm">
+            {#if $messageError}
+              <p class="text-red-500 text-xs 4xl:text-base">{$messageError}</p>
+            {/if}
+            <p class="text-gray-500 text-xs 4xl:text-base">
               {$message.length}/600 characters used
             </p>
           </div>
-          <Button type="submit" class="4xl:text-xl w-1/3">메시지 보내기</Button>
+          <Button type="submit" class="4xl:text-xl w-1/3 focus:outline-none focus:ring-0">메시지 보내기</Button>
         </form>
       </Contact>
     </div>
