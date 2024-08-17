@@ -93,7 +93,7 @@ docker-compose up --build
 This command will:
 - Build the Docker images for both the backend and frontend services.
 - Start the MongoDB service, backend FastAPI server, and frontend SvelteKit server.
-- Mongo Express will also be available at http://localhost:8081 to manage your MongoDB data.
+- Mongo Express will also be available for managing your MongoDB data.
 
 3. Access the application:
 - Frontend: Visit http://localhost:4173 in your web browser to view the frontend application.
