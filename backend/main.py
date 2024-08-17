@@ -31,14 +31,14 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-app.include_router(authentication.router, tags=["login"])
-app.include_router(user.router, tags=["user"])
-app.include_router(crawl.router, tags=["crawler"])
-app.include_router(websocket.router, tags=["websocket"])
-app.include_router(test.router, tags=["test"])
-app.include_router(history.router, tags=["history"])
-app.include_router(report.router, tags=["report"])
-app.include_router(contact.router, tags=["contact"])
+app.include_router(authentication.router, tags=["login"], prefix="/api")
+app.include_router(user.router, tags=["user"], prefix="/api")
+app.include_router(crawl.router, tags=["crawler"], prefix="/api")
+app.include_router(websocket.router, tags=["websocket"], prefix="/api")
+app.include_router(test.router, tags=["test"], prefix="/api")
+app.include_router(history.router, tags=["history"], prefix="/api")
+app.include_router(report.router, tags=["report"], prefix="/api")
+app.include_router(contact.router, tags=["contact"], prefix="/api")
 
 
 @asynccontextmanager

@@ -30,7 +30,7 @@
   async function downloadReport(log: LogEntry) {
     try {
       const response = await new Promise<Response>((resolve, reject) => {
-        fastapi("GET", `/report/${log.file}`, {}, resolve, reject);
+        fastapi("GET", `/api/report/${log.file}`, {}, resolve, reject);
       });
 
       const blob = await response.blob();
@@ -85,7 +85,7 @@
       const response = await new Promise<any>((resolve, reject) => {
         fastapi(
           "GET",
-          `/history/${user_id}`,
+          `/api/history/${user_id}`,
           {},
           (data) => resolve(data),
           (error) => reject(error)
@@ -104,7 +104,7 @@
       await new Promise<void>((resolve, reject) => {
         fastapi(
           "DELETE",
-          `/history/${getId()}/${history_id}`,
+          `/api/history/${getId()}/${history_id}`,
           {},
           () => resolve(),
           (error) => reject(error)

@@ -26,7 +26,7 @@
 
     try {
       await new Promise((resolve, reject) => {
-        fastapi("POST", "/user", userData, resolve, reject);
+        fastapi("POST", "/api/user", userData, resolve, reject);
       });
 
       Swal.fire(

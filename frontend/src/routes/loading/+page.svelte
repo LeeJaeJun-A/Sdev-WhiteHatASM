@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
-  import { getCurrentUrl, getHistoryID, getId, setCrawlResult } from "$lib/store";
+  import { getCurrentUrl, getId, setCrawlResult } from "$lib/store";
   import fastapi from "$lib/fastapi";
 
   let socket: WebSocket | null = null;
@@ -50,7 +50,7 @@
       const params = { url, id };
       fastapi(
         "POST",
-        "/crawl",
+        "/api/crawl",
         params,
         (response) => {
           console.log("Crawling started: ", response);

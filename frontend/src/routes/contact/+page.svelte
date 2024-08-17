@@ -51,7 +51,7 @@
         await new Promise<void>((resolve, reject) => {
           fastapi(
             "POST",
-            "/contact",
+            "/api/contact",
             { title: $title, phone: $phone, email: $email, message: $message },
             resolve,
             reject

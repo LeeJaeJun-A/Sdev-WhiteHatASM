@@ -24,7 +24,7 @@ const refreshToken = async (): Promise<string | null> => {
   return new Promise<string | null>((resolve, reject) => {
     fastapi(
       'POST',
-      '/refresh',
+      '/api/refresh',
       { refresh_token: storedRefreshToken },
       (response) => {
         const { access_token } = response;
@@ -47,7 +47,7 @@ export const verifyToken = async (): Promise<{
   if (storedToken) {
     try {
       const userData: UserData = await new Promise((resolve, reject) => {
-        fastapi("GET", "/verify-token", {}, resolve, reject, storedToken);
+        fastapi("GET", "/api/verify-token", {}, resolve, reject, storedToken);
       });
 
       return { user: userData, error: null };

@@ -69,7 +69,7 @@
             await new Promise((resolve, reject) => {
               fastapi(
                 "PUT",
-                `/history/${getId()}/${getHistoryID()}`,
+                `/api/history/${getId()}/${getHistoryID()}`,
                 { file: reportID },
                 resolve,
                 reject
@@ -87,7 +87,7 @@
           await new Promise((resolve, reject) => {
             fastapi(
               "PUT",
-              `/history/${getId()}/${getHistoryID()}`,
+              `/api/history/${getId()}/${getHistoryID()}`,
               { status: "Test Completed" },
               resolve,
               reject
@@ -134,7 +134,7 @@
       await connectWebSocket();
 
       await new Promise((resolve, reject) => {
-        fastapi("POST", "/test", { urlCVEList, id }, resolve, reject);
+        fastapi("POST", "/api/test", { urlCVEList, id }, resolve, reject);
       });
 
       const now = new Date().toISOString();
@@ -142,7 +142,7 @@
         (resolve, reject) => {
           fastapi(
             "POST",
-            "/history",
+            "/api/history",
             {
               user_id: getId(),
               history: {
@@ -214,7 +214,7 @@
         await new Promise((resolve, reject) => {
           fastapi(
             "PUT",
-            `/history/${getId()}/${getHistoryID()}`,
+            `/api/history/${getId()}/${getHistoryID()}`,
             { status: "Test Canceled" },
             resolve,
             reject
@@ -236,7 +236,7 @@
   async function downloadReport() {
     try {
       const response = await new Promise<Response>((resolve, reject) => {
-        fastapi("GET", `/report/${getReportID()}`, {}, resolve, reject);
+        fastapi("GET", `/api/report/${getReportID()}`, {}, resolve, reject);
       });
 
       const blob = await response.blob();

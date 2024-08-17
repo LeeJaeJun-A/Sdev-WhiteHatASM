@@ -16,7 +16,7 @@
       const params = { id: $id, password: password };
       fastapi(
         "POST",
-        "/token",
+        "/api/token",
         params,
         (data) => {
           localStorage.setItem("access_token", data.access_token);

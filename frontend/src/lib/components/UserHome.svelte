@@ -19,7 +19,7 @@
       const response = await new Promise<any>((resolve, reject) => {
         fastapi(
           "GET",
-          `/history/${getId()}/recent`,
+          `/api/history/${getId()}/recent`,
           {},
           (data) => resolve(data),
           (error) => reject(error)
@@ -56,7 +56,7 @@
     try {
       const validationResponse = await new Promise<{ valid: boolean }>(
         (resolve, reject) => {
-          fastapi("POST", "/validate-url", { url }, resolve, reject);
+          fastapi("POST", "/api/validate-url", { url }, resolve, reject);
         }
       );
 

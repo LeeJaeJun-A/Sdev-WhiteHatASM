@@ -29,7 +29,7 @@
     console.log(id);
     try {
       await new Promise<void>((resolve, reject) => {
-        fastapi("PUT", "/contact/read", { id }, resolve, reject);
+        fastapi("PUT", "/api/contact/read", { id }, resolve, reject);
       });
     } catch (error) {
       console.error("Error update inquiry status:", error);
@@ -41,7 +41,7 @@
 
     try {
       await new Promise<void>((resolve, reject) => {
-        fastapi("DELETE", "/contact", { id }, resolve, reject);
+        fastapi("DELETE", "/api/contact", { id }, resolve, reject);
       });
       inquiries = inquiries.filter((inquiry) => inquiry._id !== id);
     } catch (error) {
@@ -52,7 +52,7 @@
   async function fetchInquiries() {
     try {
       inquiries = await new Promise((resolve, reject) => {
-        fastapi("GET", "/contact", {}, resolve, reject);
+        fastapi("GET", "/api/contact", {}, resolve, reject);
       });
 
       console.log(inquiries);

@@ -98,20 +98,20 @@
 
   async function lockUser(userId: string) {
     return new Promise<void>((resolve, reject) => {
-      fastapi("POST", `/user/${userId}/lock`, {}, resolve, reject);
+      fastapi("POST", `/api/user/${userId}/lock`, {}, resolve, reject);
     });
   }
 
   async function deleteUser(userId: string) {
     return new Promise<void>((resolve, reject) => {
-      fastapi("DELETE", `/user/${userId}`, {}, resolve, reject);
+      fastapi("DELETE", `/api/user/${userId}`, {}, resolve, reject);
     });
   }
 
   async function fetchUsers() {
     try {
       users = await new Promise((resolve, reject) => {
-        fastapi("GET", "/user", {}, resolve, reject);
+        fastapi("GET", "/api/user", {}, resolve, reject);
       });
     } catch (error) {
       let errorMessage = "An unknown error occurred";
