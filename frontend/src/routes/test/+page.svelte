@@ -38,7 +38,7 @@
 
   async function connectWebSocket() {
     return new Promise<void>((resolve, reject) => {
-      const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/ws/${getId()}`;
+      const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/api/ws/${getId()}`;
       console.log("Connecting to WebSocket URL: ", socketUrl);
       socket = new WebSocket(socketUrl);
 

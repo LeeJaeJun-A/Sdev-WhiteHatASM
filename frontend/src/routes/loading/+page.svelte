@@ -12,7 +12,7 @@
 
   async function connectWebSocket() {
     return new Promise<void>((resolve, reject) => {
-      const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/ws/${getId()}`;
+      const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/api/ws/${getId()}`;
       socket = new WebSocket(socketUrl);
 
       socket.onopen = () => {
