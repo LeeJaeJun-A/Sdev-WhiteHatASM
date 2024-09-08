@@ -1,4 +1,9 @@
-from backend.routes.websocket import manager
+#import sys
+#import os
+
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
+from backend.routes.websocket import ConnectionManager
 import json
 import asyncio
 from backend.crawler.subdomain import SubdomainScanner
@@ -7,6 +12,7 @@ from backend.crawler.version import AdvancedWebAnalyzer
 from backend.crawler.myparser import Parser
 from backend.database.mongodb import cve_collection
 
+manager = ConnectionManager()
 
 async def send_status(user_id: str, message: str):
     await manager.send_message(user_id, message)
@@ -97,6 +103,7 @@ async def crawl_url(url: str, user_id: str):
     # 여기에 실제 크롤링 로직을 추가하세요.
     subdomain_scanner = SubdomainScanner(url)
     sub_urls = await subdomain_scanner.scan()
+    print(sub_urls)
 
     # 메인 URL에 대해서 크롤링 끝
     await send_status(user_id, f"Crawling {url} completed")
