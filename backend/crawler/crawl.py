@@ -22,13 +22,19 @@ def get_cves(software_info, directory_structure):
     server_type = server.get("type", "").lower()
     server_version = server.get("version", "")
     if server_type in cve_collection and server_version in cve_collection[server_type]:
-        cves.extend(cve_collection[server_type][server_version])
+        cves.extend((cve, "server") for cve in cve_collection[server_type][server_version])
     
     for tech in software_info.get("technologies", []):
         tech_name = tech.lower()
-        tech_version = "unknown"  
+        tech_version = "unknown"  # 버전 정보가 없는 경우 "unknown"으로 처리
         if tech_name in cve_collection and tech_version in cve_collection[tech_name]:
-            cves.extend(cve_collection[tech_name][tech_version])
+            for cve in cve_collection[tech_name][tech_version]:
+                for location in directory_structure:
+                    if tech_name in location.lower():
+                        cves.append((cve, location))
+                        break
+                else:
+                    cves.append((cve, "unknown"))
     
     return list(set(cves))  # 중복 제거
 
