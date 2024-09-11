@@ -3,7 +3,7 @@ import aiohttp
 from urllib.parse import urljoin, urlparse
 import json
 import logging
-from myparser import Parser
+from backend.crawler.myparser import Parser
 
 logging.basicConfig(level=logging.INFO)
 
