@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
 
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY",  os.urandom(32).hex())
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")

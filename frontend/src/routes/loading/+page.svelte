@@ -15,21 +15,27 @@
       const socketUrl = `ws://${baseUrl.replace(/^http:\/\/|^https:\/\//, "")}/api/ws/${getId()}`;
       socket = new WebSocket(socketUrl);
 
+      const timeout = setTimeout(() => {
+        reject(new Error("WebSocket connection timed out"));
+      }, 10000);
+
       socket.onopen = () => {
+        clearTimeout(timeout);
         resolve();
       };
 
       socket.onmessage = async (event) => {
         const message = event.data;
+        console.log(message);
         if (message === "Full crawling completed") {
           isLoading = false;
         } else if (message.startsWith("{") && message.endsWith("}")) {
           try {
             setCrawlResult(JSON.parse(message));
-            goto("/test", {replaceState:true});
+            goto("/test", { replaceState: true });
           } catch (error) {
             console.error("Failed to parse JSON:", error);
-            goto("/user", {replaceState:true});
+            goto("/user", { replaceState: true });
           }
         } else {
           currentMessage = message;
@@ -48,22 +54,18 @@
       const url = getCurrentUrl();
       const id = getId();
       const params = { url, id };
-      fastapi(
-        "POST",
-        "/api/crawl",
-        params,
-        (response) => {
-          console.log("Crawling started: ", response);
-        },
-        (error) => {
-          console.error("Error starting crawling: ", error);
-        }
-      );
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        await new Promise<void>((resolve, reject) => {
+          fastapi("POST", "/api/crawl", params, resolve, reject);
+        });
+      } else {
+        console.error("WebSocket is not open. Cannot start crawling.");
+      }
     } catch (error) {
       console.error("Failed to connect to WebSocket:", error);
     }
   }
-  
+
   onMount(async () => {
     await startCrawling();
   });
@@ -74,9 +76,13 @@
     }
   });
 
-  function goBack() {
+  function cancelCrawling() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send("cancel");
+    }
     goto("/user", { replaceState: true });
   }
+  
 </script>
 
 <div class="flex flex-col justify-center items-center h-screen bg-gray-50">
@@ -87,21 +93,25 @@
           class="absolute w-15 h-15 animate-rotate 4xl:w-32 4xl:h-32"
           style="animation-delay: {0.15 * i}s;"
         >
-          <div class="relative top-7 w-2.5 h-2.5 rounded-full bg-red-500 4xl:w-4 4xl:h-4"></div>
+          <div
+            class="relative top-7 w-2.5 h-2.5 rounded-full bg-red-500 4xl:w-4 4xl:h-4"
+          ></div>
         </div>
       {/each}
     </div>
-    <div class="absolute bottom-0 mb-12 flex flex-col justify-center items-center text-black 4xl:mb-24 select-none">
+    <div
+      class="absolute bottom-0 mb-12 flex flex-col justify-center items-center text-black 4xl:mb-24 select-none"
+    >
       {#if isLoading}
         {#if currentMessage}
           <p class="text-sm 4xl:text-xl">{currentMessage}</p>
         {/if}
       {/if}
       <button
-        on:click={goBack}
+        on:click={cancelCrawling}
         class="mt-4 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-blue-300 4xl:mt-8 4xl:w-40 4xl:h-16 4xl:text-xl"
       >
-        크롤링 취소
+        취소
       </button>
     </div>
   </div>
