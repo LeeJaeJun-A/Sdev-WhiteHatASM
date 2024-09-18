@@ -21,28 +21,57 @@ async def send_status(user_id: str, message: str):
 async def send_json(user_id: str, data: dict):
     await manager.send_message(user_id, json.dumps(data))
 
-def get_cves(software_info, directory_structure):
-    cves = []
-    
-    server = software_info.get("server", {})
-    server_type = server.get("type", "").lower()
-    server_version = server.get("version", "")
-    if server_type in cve_collection and server_version in cve_collection[server_type]:
-        cves.extend((cve, "server") for cve in cve_collection[server_type][server_version])
-    
-    for tech in software_info.get("technologies", []):
-        tech_name = tech.lower()
-        tech_version = "unknown"  # 버전 정보가 없는 경우 "unknown"으로 처리
-        if tech_name in cve_collection and tech_version in cve_collection[tech_name]:
-            for cve in cve_collection[tech_name][tech_version]:
-                for location in directory_structure:
-                    if tech_name in location.lower():
-                        cves.append((cve, location))
-                        break
-                else:
-                    cves.append((cve, "unknown"))
-    
-    return list(set(cves))  # 중복 제거
+def get_cve_numbers(software_info, directory_structure):
+    cve_numbers = set()
+
+    # MongoDB에서 모든 CVE 데이터 가져오기
+    all_cves = list(cve_collection.find({}, {"_id": 0, "cve_list": 1}))
+
+    def match_cve(page_details):
+        url = page_details.get("url", "").lower()
+        input_tags = page_details.get("input_tags", [])
+        csrf_token = page_details.get("csrf_token")
+        cookies = page_details.get("cookies", {})
+
+        for cve_doc in all_cves:
+            for cve_item in cve_doc["cve_list"]:
+                for cve_number, details in cve_item.items():
+                    # OS 매칭
+                    if software_info["os"].lower() in details["os"].lower():
+                        # 서버 또는 기술 매칭
+                        if (software_info["server"]["name"].lower() in details["env"].lower() or
+                            any(tech.lower() in details["env"].lower() for tech in software_info["technologies"])):
+                            
+                            # URL 패턴 매칭
+                            if any(tech.lower() in url for tech in software_info["technologies"] + [software_info["server"]["name"]]):
+                                cve_numbers.add(cve_number)
+                                continue
+
+                            # 입력 태그 분석
+                            if details.get("vulnerability_type") == "input" and any(tag["type"] in ["text", "password", "search"] for tag in input_tags):
+                                cve_numbers.add(cve_number)
+                                continue
+
+                            # CSRF 토큰 확인
+                            if details.get("vulnerability_type") == "csrf" and csrf_token is None:
+                                cve_numbers.add(cve_number)
+                                continue
+
+                            # 쿠키 분석
+                            if details.get("vulnerability_type") == "cookie" and cookies:
+                                cve_numbers.add(cve_number)
+                                continue
+
+    def traverse_structure(structure):
+        if "details" in structure:
+            match_cve(structure["details"])
+        
+        for child in structure.get("children", []):
+            traverse_structure(child)
+
+    traverse_structure(directory_structure)
+
+    return list(cve_numbers)
 
 
 """
