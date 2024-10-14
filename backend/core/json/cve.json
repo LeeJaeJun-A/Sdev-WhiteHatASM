@@ -3,26 +3,20 @@
     {
       "cve number": "example1",
       "cvss": "80",
-      "payloads": [
-        { "env": "linux", "payload": "12342" },
-        { "env": "win10", "payload": "12342" }
-      ]
+      "os" : "unix/linux",
+      "technology" : "web",
+      "framework" : "jquery",
+      "endpoint" : "text",
+      "payloads":"12345678"
     },
     {
       "cve number": "example2",
       "cvss": "80",
-      "payloads": [
-        { "env": "linux", "payload": "12342" },
-        { "env": "win10", "payload": "12342" }
-      ]
-    },
-    {
-        "cve number": "example3",
-        "cvss": "80",
-        "payloads": [
-          { "env": "linux", "payload": "12342" },
-          { "env": "win10", "payload": "12342" }
-        ]
-      }
+      "os" : "unix/linux",
+      "technology" : "web",
+      "framework" : "jquery",
+      "endpoint" : "hidden",
+      "payloads":"12345678"
+    }
   ]
 }

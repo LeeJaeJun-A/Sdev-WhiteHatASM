@@ -12,6 +12,7 @@ from backend.crawler.get_subdomains_directory import SubdomainDirectoryCrawler
 from backend.crawler.version import AdvancedWebAnalyzer
 from backend.crawler.myparser import Parser
 from backend.database.mongodb import cve_collection
+from typing import Dict, List, Any
 
 manager = ConnectionManager()
 
@@ -29,30 +30,51 @@ async def send_json(user_id: str, data: dict):
     await manager.send_message(user_id, json.dumps(data))
 
 
-def get_cves(software_info, directory_structure):
-    cves = []
+def get_cves(software_info: Dict[str, Any], directory_structure: Dict[str, Any]) -> List[str]:
+    def check_endpoints(details: Dict[str, Any], cve: Dict[str, Any]) -> bool:
+        if details is None:
+            return False
+        if 'input_tags' in details:
+            for tag in details['input_tags']:
+                if tag.get('type') == cve.get('endpoint') or tag.get('id') == cve.get('endpoint'):
+                    return True
+        return False
 
-    server = software_info.get("server", {})
-    server_type = server.get("type", "").lower()
-    server_version = server.get("version", "")
-    if server_type in cve_collection and server_version in cve_collection[server_type]:
-        cves.extend(
-            (cve, "server") for cve in cve_collection[server_type][server_version]
-        )
+    def traverse_directory(directory: Dict[str, Any], cve: Dict[str, Any]) -> bool:
+        details = directory.get('details')
+        if details is not None and check_endpoints(details, cve):
+            return True
+        for child in directory.get('children', []):
+            if traverse_directory(child, cve):
+                return True
+        return False
 
-    for tech in software_info.get("technologies", []):
-        tech_name = tech.lower()
-        tech_version = "unknown"  # 버전 정보가 없는 경우 "unknown"으로 처리
-        if tech_name in cve_collection and tech_version in cve_collection[tech_name]:
-            for cve in cve_collection[tech_name][tech_version]:
-                for location in directory_structure:
-                    if tech_name in location.lower():
-                        cves.append((cve, location))
-                        break
-                else:
-                    cves.append((cve, "unknown"))
+    matching_cves = set()
 
-    return list(set(cves))  # 중복 제거
+    if directory_structure is None:
+        return list(matching_cves)
+
+    os_value = software_info.get("os", "")
+    technologies = software_info.get("technologies", [])
+    frameworks = software_info.get("frameworks", [])
+
+    print(f"OS: {os_value}")
+    print(f"Technologies: {technologies}")
+    print(f"Frameworks: {frameworks}")
+
+    query = {
+        "$or": [
+            {"os": os_value.lower() if os_value else ""},
+            {"technology": {"$in": [tech.lower() for tech in technologies if tech]}},
+            {"framework": {"$in": [framework.lower() for framework in frameworks if framework]}}
+        ]
+    }
+
+    for cve in cve_collection.find(query):
+        if traverse_directory(directory_structure, cve):
+            matching_cves.add(cve.get('cve number'))
+
+    return list(matching_cves)
 
 
 """
@@ -169,6 +191,8 @@ async def crawl_url(url: str, user_id: str):
     main_software_info = all_results[0]
     main_directory_structure = all_results[1]
     subdomain_results = all_results[2:]
+
+    print("Main directory structure:", main_directory_structure)
 
     if not await check_connection(user_id):
         return None
