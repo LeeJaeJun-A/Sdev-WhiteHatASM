@@ -138,53 +138,10 @@ def save_report():
         print(f"File uploaded to MongoDB with file_id: {file_id}")
         return file_id
 
-
-
-
-########################
-# 예제 입력값
-########################
-company_name = "XYZ Corporation"
-target_url = "www.newtarget.com"
-date = datetime.datetime.now().strftime('%Y. %m. %d')
-structure = "메인 URL: http://newmain.com -> 하위 페이지: [자식 URL: http://child.newmain.com -> 세부 정보: ...]"
-gender_report(company_name, target_url, date, structure)
-
-vulnerabilities = [
-    {
-        'number' : 1,
-        'vuln' : "sqli",
-        'cve' : "CVE0000-0000",
-        'url': "gilgilgil",
-        'target_keys': ["Input_tags", "csrf_token", "form_data"],
-        'target_values': ["Submit", "textparams", "gsp"],
-        'cvss_score': "9999999999999/10",
-        'payload': "fakepyalodddddddddddddddddd",
-    },
-    {
-        'number' : 2,
-        'vuln' : "xss",
-        'cve' : "CVE1111-1111",
-        'url': "testtest",
-        'target_keys': ["Input_tags", "csrf_token", "form_data"],
-        'target_values': ["Submit", "textparams", "gsp"],
-        'cvss_score': "888888888/10",
-        'payload': "fakepyalodddddddddddddddddd",
-    },
-    {
-        'number' : 3,
-        'vuln' : "xss",
-        'cve' : "CVE33333-33333",
-        'url': "testtest",
-        'target_keys': ["Input_tags", "csrf_token", "form_data"],
-        'target_values': ["Submit", "textparams", "gsp"],
-        'cvss_score': "888888888/10",
-        'payload': "fakepyalodddddddddddddddddd",
-    },
-]
-for i in range(len(vulnerabilities)):
-    vuln = vulnerabilities[i]['vuln']
-    is_last = (i == len(vulnerabilities) - 1)
-    gen_tables(doc, vulnerabilities[i]['number'])
-    update_vulnerability_info(doc, vulnerabilities[i]['number'], 1, [vulnerabilities[i]], vuln, is_last)
-    doc.add_page_break()
+def vuln_all(vulnerabilities):
+    for i in range(len(vulnerabilities)):
+        vuln = vulnerabilities[i]['vuln']
+        is_last = (i == len(vulnerabilities) - 1)
+        gen_tables(doc, vulnerabilities[i]['number'])
+        update_vulnerability_info(doc, vulnerabilities[i]['number'], 1, [vulnerabilities[i]], vuln, is_last)
+        doc.add_page_break()

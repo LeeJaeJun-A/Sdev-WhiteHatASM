@@ -1,7 +1,10 @@
 from backend.routes.websocket import manager
-from backend.core.report import save_report
+from backend.core.report import gender_report, save_report ,vuln_all
 import json
 import asyncio
+import datetime
+
+json_file_path = '/app/backend/core/json/cve.json'
 
 async def send_status(user_id: str, message: str):
     await manager.send_message(user_id, message)
@@ -10,6 +13,30 @@ async def send_status(user_id: str, message: str):
 async def send_json(user_id: str, data: dict):
     await manager.send_message(user_id, json.dumps(data))
 
+def load_cve_data(json_file_path):
+    with open(json_file_path, 'r') as file:
+        cve_data = json.load(file)
+    return cve_data
+
+def transform_cve_to_vulnerabilities(cve_data, urlCVEList):
+    vulnerabilities = []
+    for idx, cve_info in enumerate(cve_data['cve_list'], start=1):
+        target_keys = cve_info.get("endpoint", "unknown")
+        if isinstance(target_keys, str):
+            target_keys = [target_keys]
+
+        vulnerability = {
+            'number': idx,
+            'vuln': cve_info["vuln"],
+            'cve': cve_info["cve number"],
+            'url': urlCVEList[0][0],
+            'target_keys': target_keys,
+            'target_values': ["example_value"],  # Example values
+            'cvss_score': f'{cve_info["cvss"]}/10',  # CVSS score
+            'payload': cve_info["payloads"]  # Payload from cve_data
+        }
+        vulnerabilities.append(vulnerability)
+    return vulnerabilities
 
 """
     input: (url, cve종류) 쌍의 tuple을 가진 list
@@ -29,6 +56,9 @@ async def send_json(user_id: str, data: dict):
 
 """
 async def cveTest(urlCVEList: list, user_id: str):
+    cve_data = load_cve_data(json_file_path)
+    vulnerabilities = transform_cve_to_vulnerabilities(cve_data, urlCVEList)
+
     for url, cve in urlCVEList:
         # 테스트를 시작할 때 항상 이 메세지를 보내고 시작하셔야 합니다.
         await send_status(user_id, f"Testing for {cve} on {url} is starting.")
@@ -47,8 +77,11 @@ async def cveTest(urlCVEList: list, user_id: str):
     # 보고서 생성 시작
     await send_status(user_id, f"Initiating the report generation process.")
     
-    # 여기에 실제 보고서 생성 로직을 추가하세요.
-    #save_report()
+    date = datetime.datetime.now().strftime('%Y. %m. %d')
+    structure = "대상 구조 설명"
+    
+    gender_report(urlCVEList[0][0], urlCVEList[0][0], date, structure)
+    vuln_all(vulnerabilities)
     file_id  = save_report()
     
     # 보고서 생성 완료
