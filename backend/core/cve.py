@@ -1,7 +1,7 @@
 import json
 from backend.database.mongodb import cve_collection
 
-json_file_path = 'backend/core/json/cve.json'
+json_file_path = '/app/backend/core/json/cve.json'
 
 def load_json_file(file_path):
     with open(file_path, 'r') as file:

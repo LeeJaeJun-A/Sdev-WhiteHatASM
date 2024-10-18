@@ -8,7 +8,7 @@ import copy
 from backend.database.mongodb import fs  # MongoDB GridFS
 from backend.routes.report_design import gen_tables, gen_closing_page, update_toc
 
-doc = Document("../routes/결과보고서v3.docx")
+doc = Document("/app/backend/routes/reportv3.docx")
 
 explain={
     "sqli":[
@@ -133,8 +133,10 @@ def save_report():
     doc.save(output_path)
 
     with open(output_path, "rb") as file:
+        #name=f"updated_{random_number}.docx"
         file_id = fs.put(file, filename=f"updated_{random_number}.docx")
         print(f"File uploaded to MongoDB with file_id: {file_id}")
+        return file_id
 
 
 
@@ -186,5 +188,3 @@ for i in range(len(vulnerabilities)):
     gen_tables(doc, vulnerabilities[i]['number'])
     update_vulnerability_info(doc, vulnerabilities[i]['number'], 1, [vulnerabilities[i]], vuln, is_last)
     doc.add_page_break()
-
-save_report()

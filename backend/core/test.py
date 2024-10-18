@@ -1,4 +1,5 @@
 from backend.routes.websocket import manager
+from backend.core.report import save_report
 import json
 import asyncio
 
@@ -47,8 +48,8 @@ async def cveTest(urlCVEList: list, user_id: str):
     await send_status(user_id, f"Initiating the report generation process.")
     
     # 여기에 실제 보고서 생성 로직을 추가하세요.
-    await asyncio.sleep(2)  # 이 부분은 삭제하고 해당하는 보고서 생성 함수를 실행하세요.
-    file_id  = "absde" # 예시 file_id
+    #save_report()
+    file_id  = save_report()
     
     # 보고서 생성 완료
     await send_status(user_id, f"The report '{file_id}' has been completed.")
