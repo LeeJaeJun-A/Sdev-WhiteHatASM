@@ -8,7 +8,7 @@
     getReportID,
     getHistoryID,
     getCurrentUrl,
-    setHistoryID
+    setHistoryID,
   } from "$lib/store";
   import { onMount, onDestroy } from "svelte";
   import { resetNodes } from "$lib/expand";
@@ -60,7 +60,7 @@
           const reportTitleMatch = message.match(
             /The report '(.*?)' has been completed\./
           );
-          
+
           if (reportTitleMatch && reportTitleMatch[1]) {
             progressPercentage.set(100);
             const reportID = reportTitleMatch[1];
@@ -235,15 +235,25 @@
 
   async function downloadReport() {
     try {
-      const response = await new Promise<Response>((resolve, reject) => {
-        fastapi("GET", `/api/report/${getReportID()}`, {}, resolve, reject);
+      const baseUrl = import.meta.env.VITE_FASTAPI_URL || 'http://127.0.0.1:8000';
+
+      const response = await fetch(`${baseUrl}/api/report/${getReportID()}`, {
+        method: "GET",
       });
 
-      const blob = await response.blob();
+      if (!response.ok) {
+        throw new Error(`Error downloading file: ${response.statusText}`);
+      }
 
+      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
+
+      const filename =
+        response.headers.get("Content-Disposition")?.split("filename=")[1] ||
+        "report.docx";
+      a.download = filename;
 
       document.body.appendChild(a);
       a.click();

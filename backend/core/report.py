@@ -7,6 +7,7 @@ import os
 import copy
 from backend.database.mongodb import fs  # MongoDB GridFS
 from backend.routes.report_design import gen_tables, gen_closing_page, update_toc
+import hashlib
 
 doc = Document("/app/backend/routes/reportv3.docx")
 
@@ -124,10 +125,10 @@ def gender_report(company_name, target_url, date, structure):
             break
 
 # 문서 저장 및 MongoDB에 업로드
-# 추후 방식을 바꿔야함, 현재는 random number
 def save_report():
     gen_closing_page(doc)
-    random_number = random.randint(1000, 9999)
+    current_time = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    random_number = hashlib.sha256(current_time.encode()).hexdigest()[:8]
     os.makedirs("/app/backend/report", exist_ok=True)
     output_path = f"/app/backend/report/updated_{random_number}.docx"
     doc.save(output_path)
