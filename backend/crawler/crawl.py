@@ -192,8 +192,6 @@ async def crawl_url(url: str, user_id: str):
     main_directory_structure = all_results[1]
     subdomain_results = all_results[2:]
 
-    print("Main directory structure:", main_directory_structure)
-
     if not await check_connection(user_id):
         return None
     
