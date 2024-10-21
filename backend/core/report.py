@@ -6,10 +6,10 @@ import random
 import os
 import copy
 from backend.database.mongodb import fs  # MongoDB GridFS
-from backend.routes.report_design import gen_tables, gen_closing_page, update_toc
+from backend.core.report_design import gen_tables, gen_closing_page, update_toc
 import hashlib
 
-doc = Document("/app/backend/routes/reportv3.docx")
+doc = Document("/app/backend/core/reportv3.docx")
 
 explain={
     "sqli":[
