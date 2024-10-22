@@ -4,7 +4,7 @@ import json
 import asyncio
 import datetime
 
-json_file_path = 'backend/core/json/cve.json'
+json_file_path = '/app/backend/core/json/cve.json'
 
 async def send_status(user_id: str, message: str):
     await manager.send_message(user_id, message)
