@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from docx import Document
 from docx.shared import Pt
-import datetime
+from datetime import datetime
 import random
 import os
 import copy

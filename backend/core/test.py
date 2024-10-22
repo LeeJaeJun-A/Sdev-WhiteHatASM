@@ -14,7 +14,7 @@ async def send_json(user_id: str, data: dict):
     await manager.send_message(user_id, json.dumps(data))
 
 def load_cve_data(json_file_path):
-    with open(json_file_path, 'r') as file:
+    with open(json_file_path, 'rb') as file:
         cve_data = json.load(file)
     return cve_data
 

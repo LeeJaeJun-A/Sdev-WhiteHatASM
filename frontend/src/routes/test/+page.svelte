@@ -235,11 +235,13 @@
 
   async function downloadReport() {
     try {
-      const baseUrl = import.meta.env.VITE_FASTAPI_URL || 'http://127.0.0.1:8000';
+      const baseUrl = import.meta.env.VITE_FASTAPI_URL || 'http://localhost:8000';
 
       const response = await fetch(`${baseUrl}/api/report/${getReportID()}`, {
         method: "GET",
       });
+
+      console.log(response);
 
       if (!response.ok) {
         throw new Error(`Error downloading file: ${response.statusText}`);
